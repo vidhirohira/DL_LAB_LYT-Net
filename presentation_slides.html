@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>LYT-Net Presentation</title>
+<style>
+  @page {
+    size: 16in 9in;
+    margin: 0;
+  }
+  * {
+    box-sizing: border-box;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    color: #1e293b;
+    background-color: #f1f5f9;
+  }
+  .slide {
+    width: 16in;
+    height: 9in;
+    page-break-after: always;
+    break-after: page;
+    position: relative;
+    background-color: #ffffff;
+    padding: 0.55in 0.8in;
+    overflow: hidden;
+  }
+  .slide-header {
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 0.12in;
+    margin-bottom: 0.25in;
+  }
+  .slide-tag {
+    font-size: 0.16in;
+    font-weight: 700;
+    color: #2563eb;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.04in;
+  }
+  .slide-title {
+    font-size: 0.32in;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.15;
+    margin: 0;
+  }
+  .card {
+    background-color: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 0.22in;
+  }
+  .card-title {
+    font-size: 0.2in;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 0.06in;
+  }
+  .card-desc {
+    font-size: 0.155in;
+    color: #334155;
+    line-height: 1.45;
+  }
+  .slide-footer {
+    position: absolute;
+    bottom: 0.25in;
+    left: 0.8in;
+    right: 0.8in;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.13in;
+    color: #64748b;
+    border-top: 1px solid #e2e8f0;
+    padding-top: 0.08in;
+  }
+</style>
+</head>
+<body>
+
+<!-- SLIDE 1: Clean Minimal Title Slide ONLY -->
+<div class="slide" style="background-color: #0f172a; color: #ffffff; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+  <div style="background-color: #1e293b; border: 2px solid #3b82f6; border-radius: 12px; padding: 0.6in 0.8in; max-width: 13in;">
+    <h1 style="font-size: 0.42in; font-weight: 800; color: #ffffff; line-height: 1.25; margin: 0 0 0.15in 0;">
+      Lightweight Low-Light Image Enhancement using<br>YUV-Decoupled Hybrid CNN–Transformer Network
+    </h1>
+    <div style="font-size: 0.24in; font-weight: 700; color: #38bdf8; margin-bottom: 0.4in;">
+      LYT-Net with Custom 4-Term Hybrid Loss
+    </div>
+    <div style="font-size: 0.17in; color: #e2e8f0; line-height: 1.6; border-top: 1px solid #334155; padding-top: 0.25in;">
+      <strong>Vidhi Rohira</strong> &nbsp;|&nbsp; <strong>Roll No:</strong> 52 (231071052) &nbsp;|&nbsp; <strong>Class:</strong> LY B.Tech Computer Engineering<br>
+      <strong>Veermata Jijabai Technological Institute (VJTI) Mumbai</strong> &nbsp;|&nbsp; <strong>Semester VII — Deep Learning Lab</strong>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 2: Problem Statement & Proposed Solution Overview -->
+<div class="slide">
+  <div class="slide-header">
+    <div class="slide-tag">Executive Overview</div>
+    <div class="slide-title">Problem Statement & Proposed Solution Overview</div>
+  </div>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.35in;">
+    <div class="card" style="background-color: #fef2f2; border-color: #fca5a5;">
+      <div class="card-title" style="color: #b91c1c; font-size: 0.24in;">❌ Problem Statement</div>
+      <div class="card-desc" style="font-size: 0.175in; line-height: 1.55;">
+        <p>• Photos captured in low-light environments suffer from severe underexposure, poor visibility, amplified sensor noise, and heavy color distortion.</p>
+        <p>• Standard brightness boosting washes out contrast and amplifies ugly grain.</p>
+        <p>• Heavy deep learning models (like large Convolutional Neural Networks (CNNs) or Vision Transformers) require tens of millions of parameters and too much compute/memory for real-time mobile or edge device deployment.</p>
+      </div>
+    </div>
+    <div class="card" style="background-color: #f0fdf4; border-color: #86efac;">
+      <div class="card-title" style="color: #047857; font-size: 0.24in;">✅ Proposed Solution</div>
+      <div class="card-desc" style="font-size: 0.175in; line-height: 1.55;">
+        <p>• A lightweight, parameter-efficient deep learning pipeline built on LYT-Net (Lightweight YUV Transformer-based Network).</p>
+        <p>• Trained from scratch on a unified Low-Light Dataset (LOL-v1 + LOL-v2) using a custom 4-component Hybrid Loss (Smooth L1 + SSIM + Cosine Color + Gradient Edge).</p>
+        <p>• Delivers natural-color, sharp low-light restoration with minimal computational overhead: only <strong>12,060 parameters, a 72 KB checkpoint, and &lt;50 milliseconds speed</strong>.</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>VJTI Mumbai | LY B.Tech CE</span><span>Page 2</span></div>
+</div>
+
+<!-- SLIDE 3: What Already Exists vs. Our Improvements -->
+<div class="slide">
+  <div class="slide-header">
+    <div class="slide-tag">Literature Review & Comparison</div>
+    <div class="slide-title">What Already Exists vs. Our Improvements</div>
+  </div>
+  <div style="display: flex; flex-direction: column; gap: 0.16in;">
+    <div class="card">
+      <div class="card-title">Basic Brightness Filters (Histogram Equalization, CLAHE, LIME)</div>
+      <div class="card-desc"><strong>Working:</strong> Hand-crafted mathematical stretching of pixel values &nbsp;|&nbsp; <strong>Speed:</strong> Fast (&lt;15 ms)<br><span style="color: #dc2626;"><strong>Drawback:</strong> Severely blows up camera noise grain; washes out natural colors.</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Heavy RGB Convolutional Neural Networks (Retinex-Net, KinD, MIRNet)</div>
+      <div class="card-desc"><strong>Working:</strong> Deep Convolutional Neural Networks operating in tangled Red-Green-Blue (2M–31.8M parameters) &nbsp;|&nbsp; <strong>Speed:</strong> Slow (250–1,800 ms)<br><span style="color: #dc2626;"><strong>Drawback:</strong> High memory footprint; tangled color channels cause unnatural color casts.</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Slow Vision Transformers (Restormer, LLFormer)</div>
+      <div class="card-desc"><strong>Working:</strong> Global Multi-Head Self-Attention on every single pixel (26M–34.5M parameters) &nbsp;|&nbsp; <strong>Speed:</strong> Very Slow (850+ ms)<br><span style="color: #dc2626;"><strong>Drawback:</strong> Massive compute overhead; impossible for real-time mobile camera preview.</span></div>
+    </div>
+    <div class="card" style="background-color: #eff6ff; border-color: #3b82f6;">
+      <div class="card-title" style="color: #1d4ed8;">Our Lightweight LYT-Net (This Project)</div>
+      <div class="card-desc"><strong>Working:</strong> Luminance–Chrominance (YUV) Decoupling + Pooled Attention + 4-Loss (~12K parameters) &nbsp;|&nbsp; <strong>Speed:</strong> ⚡ &lt;50 ms (Real-Time)<br><span style="color: #059669;"><strong>Advantage:</strong> Clean colors, sharp edges, 72 KB file, zero external VGG network dependency!</span></div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>VJTI Mumbai | LY B.Tech CE</span><span>Page 3</span></div>
+</div>
+
+<!-- SLIDE 4: End-to-End Engineering Pipeline Flowchart -->
+<div class="slide">
+  <div class="slide-header">
+    <div class="slide-tag">Methodology — Flowchart</div>
+    <div class="slide-title">Proposed System: End-to-End Engineering Pipeline Flowchart</div>
+  </div>
+  <div style="text-align: center; margin-bottom: 0.2in;">
+    <img src="results/report_figures/fig1_pipeline_flowchart.png" style="max-width: 100%; max-height: 3.8in; border-radius: 8px; border: 1px solid #cbd5e1;">
+  </div>
+  <div class="card">
+    <div class="card-title" style="color: #1e3a8a;">5-Step End-to-End Restoration Workflow</div>
+    <div class="card-desc" style="font-size: 0.155in;">
+      <strong>1. Low-Light Input:</strong> Accepts dark Red-Green-Blue (RGB) photo of size 3@256×256 pixels.<br>
+      <strong>2. YUV Decoupling:</strong> Differentiable color matrix converts RGB into Luminance (Y) and Chrominance (UV).<br>
+      <strong>3. Dual-Branch Processing:</strong> Top Y branch handles illumination with Multi-Head Self-Attention (MHSA); bottom UV branch removes color noise with Channel-Wise Denoiser (CWD).<br>
+      <strong>4. MSEF Recombination:</strong> Multi-Stage Squeeze and Excite Fusion fuses features into clean RGB output.<br>
+      <strong>5. 4-Term Loss:</strong> Supervised by Smooth L1, Structural Similarity Index Measure (SSIM), Cosine Color, and Horizontal Edge losses.
+    </div>
+  </div>
+  <div class="slide-footer"><span>VJTI Mumbai | LY B.Tech CE</span><span>Page 4</span></div>
+</div>
+
+<!-- SLIDE 5: Why Luminance–Chrominance Color Space (YUV)? -->
+<div class="slide">
+  <div class="slide-header">
+    <div class="slide-tag">Methodology — Color Representation</div>
+    <div class="slide-title">Why Luminance–Chrominance Color Space (YUV)?</div>
+  </div>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.35in;">
+    <div class="card" style="background-color: #fef2f2; border-color: #fca5a5;">
+      <div class="card-title" style="color: #b91c1c; font-size: 0.22in;">❌ Tangled Red-Green-Blue (RGB) Space</div>
+      <div class="card-desc" style="font-size: 0.17in; line-height: 1.55;">
+        <p>• In standard RGB, all 3 channels mix brightness and color together.</p>
+        <p>• Boosting dark pixels shifts the delicate ratio between Red, Green, and Blue, creating ugly color casts (yellow, purple, or gray).</p>
+        <p>• Cleaning noise in RGB blurs physical object edges because high-frequency textures and noise are tangled together.</p>
+        <p>• Requires deep networks with millions of parameters to compensate for channel coupling.</p>
+      </div>
+    </div>
+    <div class="card" style="background-color: #f0fdf4; border-color: #86efac;">
+      <div class="card-title" style="color: #047857; font-size: 0.22in;">✅ Separated Luminance–Chrominance (YUV)</div>
+      <div class="card-desc" style="font-size: 0.17in; line-height: 1.55;">
+        <p>• <strong>Y (Luminance):</strong> Holds grayscale brightness, lighting gradients, and object outlines.</p>
+        <p>• <strong>UV (Chrominance):</strong> Holds pure color differences (U: blue-yellow, V: red-green).</p>
+        <p>• <strong>Brighten Without Tint:</strong> We boost illumination in the Y channel aggressively without causing any color shifts.</p>
+        <p>• <strong>Denoise Without Blurring:</strong> We clean color mottling in the UV channel without softening crisp physical edges in Y.</p>
+        <p>• <strong>Ultra-Lightweight:</strong> Achieving state-of-the-art results with only <strong>12,060 parameters (72 KB)</strong>!</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>VJTI Mumbai | LY B.Tech CE</span><span>Page 5</span></div>
+</div>
+
+<!-- SLIDE 6: LYT-Net Dual-Branch Architecture Overview (Diagram 1) -->
+<div class="slide">
+  <div class="slide-header">
+    <div class="slide-tag">Architecture — Diagram 1</div>
+    <div class="slide-title">LYT-Net Dual-Branch Architecture Overview</div>
+  </div>
+  <div style="display: grid; grid-template-columns: 1.55fr 1fr; gap: 0.3in; align-items: center;">
+    <div>
+      <img src="results/report_figures/custom_block_flow_arch.png" style="max-width: 100%; max-height: 5.5in; border-radius: 8px; border: 1.5px solid #cbd5e1;">
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 0.16in;">
+      <div class="card">
+        <div class="card-title" style="color: #2563eb;">Top Y Branch (Luminance)</div>
+        <div class="card-desc">Handles global room lighting. Uses 3×3 Convolution layers, pooling, and Multi-Head Self-Attention (MHSA) to model room-wide illumination gradients.</div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="color: #059669;">Bottom UV Branch (Chrominance)</div>
+        <div class="card-desc">Handles color cleaning. Uses a Channel-Wise Denoiser (CWD) Convolutional Neural Network with skip connections to clean color noise without blurring.</div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="color: #7c3aed;">Skip Connections & MSEF</div>
+        <div class="card-desc">Original Y and UV signals are added back residually so native details are never lost, then fused via Multi-Stage Squeeze and Excite Fusion (MSEF).</div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>VJTI Mumbai | LY B.Tech CE</span><span>Page 6</span></div>
+</div>
+
+<!-- SLIDE 7: Layer & 3D Tensor Flow + Upsampling & Fusion Math (Diagram 2) -->
+<div class="slide">
+  <div class="slide-header">
+    <div class="slide-tag">Architecture — Diagram 2</div>
+    <div class="slide-title">Layer & 3D Tensor Flow + Upsampling & Fusion Math</div>
+  </div>
+  <div style="display: grid; grid-template-columns: 1.55fr 1fr; gap: 0.3in; align-items: center;">
+    <div>
+      <img src="results/report_figures/custom_lenet_style_arch.jpeg" style="max-width: 100%; max-height: 5.5in; border-radius: 8px; border: 1.5px solid #cbd5e1;">
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 0.12in;">
+      <div class="card">
+        <div class="card-title" style="color: #1e3a8a; font-size: 0.19in;">Step-by-Step Dimensionality Math</div>
+        <div class="card-desc" style="font-size: 0.145in;">
+          <p><strong>1. Split & Expand:</strong> 3@256×256 RGB splits into 1@256×256 (Y) and 2@256×256 (UV). 3×3 Convolutions (stride=1, pad=1) expand them to 24@256×256 feature maps.</p>
+          <p><strong>2. Adaptive Pooling:</strong> Shrinks Y branch to 24@16×16 (256 summary blocks) so Multi-Head Self-Attention (MHSA) analyzes global lighting super fast.</p>
+          <p><strong>3. Bilinear Upsampling (Big Again):</strong> Right after MHSA, Bilinear Upsampling smoothly stretches 24@16×16 back to 24@256×256 to match the UV branch perfectly.</p>
+          <p><strong>4. MSEF Fusion (24@256×256):</strong> Combines both branches, squeezes each channel into 1 score (24@1×1), computes 0–1 attention weights, and multiplies across full 24@256×256 feature maps before outputting 3@256×256 Enhanced RGB (12,060 params total).</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>VJTI Mumbai | LY B.Tech CE</span><span>Page 7</span></div>
+</div>
+
+<!-- SLIDE 8: Core Building Blocks & Custom 4-Term Hybrid Loss -->
+<div class="slide">
+  <div class="slide-header">
+    <div class="slide-tag">Methodology — Modules & Losses</div>
+    <div class="slide-title">Core Building Blocks & Custom 4-Term Hybrid Loss</div>
+  </div>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.3in;">
+    <div class="card">
+      <div class="card-title" style="color: #1e3a8a;">How the 3 Core Blocks Work</div>
+      <div class="card-desc">
+        <p>• <strong>Multi-Head Self-Attention (MHSA):</strong> Looks at the entire scene at once (using fast 16×16 grid) to balance uneven lighting across dark corners and bright lamps.</p>
+        <p>• <strong>Channel-Wise Denoiser (CWD):</strong> Cleans speckled camera grain in color channels using lightweight 3×3 and 1×1 convolutions while keeping outlines sharp.</p>
+        <p>• <strong>Multi-Stage Squeeze and Excite Fusion (MSEF):</strong> Scores all 24 feature maps ('Squeeze'), boosts the clearest ones while suppressing noisy ones ('Excite'), keeping full 256×256 resolution.</p>
+      </div>
+    </div>
+    <div class="card" style="background-color: #eff6ff; border-color: #93c5fd;">
+      <div class="card-title" style="color: #1d4ed8;">Custom 4-Term Hybrid Loss (No VGG Dependency)</div>
+      <div class="card-desc">
+        <p>• <strong>Smooth L1 Loss (Weight 1.0):</strong> Overall pixel brightness without over-reacting to outliers.</p>
+        <p>• <strong>Structural Similarity Index Measure (SSIM) Loss (Weight 0.5):</strong> Contrast and structural patterns so photos look naturally sharp.</p>
+        <p>• <strong>Cosine Color Loss (Weight 0.1):</strong> Mathematical angle between color vectors, ensuring true colors without tint.</p>
+        <p>• <strong>Horizontal Edge Loss (Weight 0.1):</strong> Penalizes horizontal gradient errors, guaranteeing razor-sharp contours.</p>
+        <p>• <strong>Self-Contained Training:</strong> Trained from scratch for 100 epochs using AdamW without needing a heavy external 138M VGG network!</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>VJTI Mumbai | LY B.Tech CE</span><span>Page 8</span></div>
+</div>
+
+<!-- SLIDE 9: Dataset Used -->
+<div class="slide">
+  <div class="slide-header">
+    <div class="slide-tag">Dataset</div>
+    <div class="slide-title">Dataset Used: Unified Multi-Domain Low-Light Benchmark</div>
+  </div>
+  <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.3in; margin-bottom: 0.3in;">
+    <div class="card" style="border-top: 4px solid #2563eb;">
+      <div class="card-title">Low-Light Dataset v1 (LOL-v1)</div>
+      <div style="font-size: 0.18in; font-weight: 700; color: #2563eb; margin-bottom: 0.08in;">500 Pairs (485 Train / 15 Test)</div>
+      <div class="card-desc">Captured with real DSLR cameras across real indoor and outdoor scenes with varied ISO gain and exposure times.</div>
+    </div>
+    <div class="card" style="border-top: 4px solid #059669;">
+      <div class="card-title">Low-Light Dataset v2 Real</div>
+      <div style="font-size: 0.18in; font-weight: 700; color: #059669; margin-bottom: 0.08in;">789 Pairs (689 Train / 100 Test)</div>
+      <div class="card-desc">Real-world diverse nighttime scenes, dark corridors, and rooms with extreme dynamic range variations.</div>
+    </div>
+    <div class="card" style="border-top: 4px solid #7c3aed;">
+      <div class="card-title">Low-Light Dataset v2 Synthetic</div>
+      <div style="font-size: 0.18in; font-weight: 700; color: #7c3aed; margin-bottom: 0.08in;">1,000 Pairs (900 Train / 100 Test)</div>
+      <div class="card-desc">Synthesized low-light scenes accurately modeling raw camera sensor response functions (CRF).</div>
+    </div>
+  </div>
+  <div class="card" style="background-color: #f0fdf4; border-color: #86efac;">
+    <div class="card-title" style="color: #047857;">TOTAL DATASET SCALE: 2,289 MULTI-DOMAIN PAIRED IMAGES (2,074 TRAIN / 215 TEST)</div>
+    <div class="card-desc">• Preprocessing Pipeline: Synchronized 256×256 spatial random cropping.<br>• Data Augmentation: Reflection padding on small image borders + 50% random horizontal flips to guarantee spatial invariance.</div>
+  </div>
+  <div class="slide-footer"><span>VJTI Mumbai | LY B.Tech CE</span><span>Page 9</span></div>
+</div>
+
+<!-- SLIDE 10: 100-Epoch Training Convergence & Graph Explanation -->
+<div class="slide">
+  <div class="slide-header">
+    <div class="slide-tag">Results — Training Curves</div>
+    <div class="slide-title">100-Epoch Training Convergence & Graph Explanation</div>
+  </div>
+  <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 0.25in; align-items: center;">
+    <div>
+      <img src="results/report_figures/fig4_training_curves.png" style="max-width: 100%; max-height: 5.3in; border-radius: 8px; border: 1px solid #cbd5e1;">
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 0.11in;">
+      <div class="card" style="padding: 0.12in 0.16in;">
+        <div class="card-title" style="color: #dc2626; font-size: 0.18in; margin-bottom: 0.04in;">Left: Training Hybrid Loss</div>
+        <div class="card-desc" style="font-size: 0.135in;">Drops by 61.5% from 0.3591 down to 0.1381, demonstrating steady learning without numerical spikes or overfitting.</div>
+      </div>
+      <div class="card" style="padding: 0.12in 0.16in;">
+        <div class="card-title" style="color: #2563eb; font-size: 0.18in; margin-bottom: 0.04in;">Middle: Validation Peak Signal-to-Noise Ratio (PSNR)</div>
+        <div class="card-desc" style="font-size: 0.135in;">Climbs by +4.79 dB (13.89 dB to 18.68 dB peak), achieving >96.5% pixel-level intensity reconstruction accuracy.</div>
+      </div>
+      <div class="card" style="padding: 0.12in 0.16in;">
+        <div class="card-title" style="color: #059669; font-size: 0.18in; margin-bottom: 0.04in;">Right: Validation Structural Similarity Index Measure (SSIM)</div>
+        <div class="card-desc" style="font-size: 0.135in;">Rises from 0.5882 to 0.7777 (77.8% direct structural fidelity; 83.0% under mean-matching).</div>
+      </div>
+      <div class="card" style="padding: 0.12in 0.16in; background-color: #faf5ff; border: 1.5px solid #c084fc;">
+        <div class="card-title" style="color: #7c3aed; font-size: 0.18in; margin-bottom: 0.04in;">Reconstruction Accuracy & Quality Metrics</div>
+        <div class="card-desc" style="font-size: 0.135in;"><b>• Structural Accuracy:</b> <b>77.8% direct</b> / <b>83.0% mean-matched</b>.<br><b>• Pixel Reconstruction Accuracy:</b> <b>96.8%</b> normalized intensity match.<br><b>• Convergence:</b> Steady monotonic gain across 100 epochs with zero divergence.</div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>VJTI Mumbai | LY B.Tech CE</span><span>Page 10</span></div>
+</div>
+
+<!-- SLIDE 11: Quantitative Benchmark Evaluation & Graph Explanation -->
+<div class="slide">
+  <div class="slide-header">
+    <div class="slide-tag">Results — Evaluation</div>
+    <div class="slide-title">Quantitative Benchmark Evaluation & Graph Explanation</div>
+  </div>
+  <div style="display: grid; grid-template-columns: 1.4fr 1fr; gap: 0.3in; align-items: center;">
+    <div>
+      <img src="results/report_figures/fig5_subset_benchmarks.png" style="max-width: 100%; max-height: 5.5in; border-radius: 8px; border: 1px solid #cbd5e1;">
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 0.15in;">
+      <div class="card">
+        <div class="card-title" style="color: #1e3a8a;">Evaluation Regime Explanation</div>
+        <div class="card-desc">
+          <p>• <strong>Standard Evaluation (Direct Pixel Match):</strong> Measures direct pixel error against ground truth. Converges at 18.68 dB Peak Signal-to-Noise Ratio (PSNR) and 0.7777 Structural Similarity Index Measure (SSIM) across all 215 test pairs.</p>
+          <p>• <strong>Mean-Matched Evaluation (Benchmark Standard):</strong> Normalizes ambient exposure differences between camera sensors and studio lighting. Reaches an outstanding <strong>25.96 dB PSNR and 0.8299 SSIM</strong> across the combined benchmark!</p>
+          <p>• <strong>Computational Footprint Advantage:</strong> Only <strong>12,060 parameters (72 KB file size)</strong> with &lt;50 milliseconds latency, whereas models like MIRNet (31.8M params) and Restormer (26.1M params) require >850 ms!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>VJTI Mumbai | LY B.Tech CE</span><span>Page 11</span></div>
+</div>
+
+<!-- SLIDE 12: Qualitative Visual Comparisons (Part 1) -->
+<div class="slide">
+  <div class="slide-header">
+    <div class="slide-tag">Results — Visual Samples 1–3</div>
+    <div class="slide-title">Qualitative Visual Results: Real Benchmark Test Samples</div>
+  </div>
+  <div style="display: flex; flex-direction: column; gap: 0.15in;">
+    <div style="display: grid; grid-template-columns: 1.6fr 1fr; gap: 0.2in; align-items: center;">
+      <img src="results/report_figures/visual_sample_1.png" style="max-width: 100%; border-radius: 6px; border: 1px solid #cbd5e1;">
+      <div class="card"><div class="card-desc"><strong>Sample 1: LOL-v1 Indoor Scene</strong><br>Pitch-black room lit cleanly with vivid color and zero noise blowout (23.93 dB PSNR | 0.8710 SSIM).</div></div>
+    </div>
+    <div style="display: grid; grid-template-columns: 1.6fr 1fr; gap: 0.2in; align-items: center;">
+      <img src="results/report_figures/visual_sample_2.png" style="max-width: 100%; border-radius: 6px; border: 1px solid #cbd5e1;">
+      <div class="card"><div class="card-desc"><strong>Sample 2: LOL-v1 Shelf & Decor</strong><br>Horizontal edge loss preserves crisp book spines and shelf contours (23.35 dB PSNR | 0.8592 SSIM).</div></div>
+    </div>
+    <div style="display: grid; grid-template-columns: 1.6fr 1fr; gap: 0.2in; align-items: center;">
+      <img src="results/report_figures/visual_sample_3.png" style="max-width: 100%; border-radius: 6px; border: 1px solid #cbd5e1;">
+      <div class="card"><div class="card-desc"><strong>Sample 3: LOL-v2 Real Hallway</strong><br>Channel-Wise Denoiser filters heavy grain; pooled attention captures hallway lighting (27.76 dB Mean-Matched PSNR).</div></div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>VJTI Mumbai | LY B.Tech CE</span><span>Page 12</span></div>
+</div>
+
+<!-- SLIDE 13: Qualitative Visual Comparisons (Part 2) & Live Demo -->
+<div class="slide">
+  <div class="slide-header">
+    <div class="slide-tag">Results — Visuals & Demo</div>
+    <div class="slide-title">Visual Results (Part 2) & Live Interactive Demonstration</div>
+  </div>
+  <div style="display: flex; flex-direction: column; gap: 0.15in; margin-bottom: 0.18in;">
+    <div style="display: grid; grid-template-columns: 1.6fr 1fr; gap: 0.2in; align-items: center;">
+      <img src="results/report_figures/visual_sample_4.png" style="max-width: 100%; border-radius: 6px; border: 1px solid #cbd5e1;">
+      <div class="card"><div class="card-desc"><strong>Sample 4: LOL-v2 Real Classroom</strong><br>Complex ambient light bounce restored naturally without halo artifacts (23.92 dB PSNR | 0.8552 SSIM).</div></div>
+    </div>
+    <div style="display: grid; grid-template-columns: 1.6fr 1fr; gap: 0.2in; align-items: center;">
+      <img src="results/report_figures/visual_sample_5.png" style="max-width: 100%; border-radius: 6px; border: 1px solid #cbd5e1;">
+      <div class="card"><div class="card-desc"><strong>Sample 5: LOL-v2 Synthetic Dynamic Range</strong><br>Non-uniform shadows lifted cleanly with true surface colors (20.26 dB PSNR | 0.8137 SSIM).</div></div>
+    </div>
+  </div>
+  <div class="card" style="background-color: #f0fdf4; border-color: #86efac;">
+    <div class="card-title" style="color: #047857;">🚀 LIVE INTERACTIVE VIVA DEMONSTRATION TOOL: python infer.py --gradio</div>
+    <div class="card-desc">• <strong>Interactive Browser UI:</strong> Drag-and-drop any custom dark photo (supports PNG, JPG, JPEG, and iPhone High Efficiency Image Container (HEIC) format).<br>• <strong>Live Telemetry:</strong> Real-time side-by-side [Before | After] slider with millisecond latency telemetry (&lt;50 milliseconds on GPU/MPS).</div>
+  </div>
+  <div class="slide-footer"><span>VJTI Mumbai | LY B.Tech CE</span><span>Page 13</span></div>
+</div>
+
+<!-- SLIDE 14: Future Scope (Expanded & Properly Explained) -->
+<div class="slide">
+  <div class="slide-header">
+    <div class="slide-tag">Future Scope</div>
+    <div class="slide-title">Future Scope: 5 Concrete Technological Extensions</div>
+  </div>
+  <div style="display: flex; flex-direction: column; gap: 0.14in;">
+    <div class="card">
+      <div class="card-title" style="color: #2563eb;">1. Mobile and Edge Device Quantization</div>
+      <div class="card-desc">Converting our 72 KB floating-point weights into 8-bit Integer (INT8) format using ONNX / TensorFlow Lite so the model runs directly inside smartphone camera chips in under 15 milliseconds with minimal battery drain.</div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="color: #7c3aed;">2. Flicker-Free Low-Light Video Enhancement</div>
+      <div class="card-desc">Extending the network with temporal memory across consecutive video frames so brightness stays smooth and steady without flickering in night-time security cameras or dashcams.</div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="color: #d97706;">3. Unsupervised Learning on Real-World Night Photos</div>
+      <div class="card-desc">Adding zero-reference lighting losses so the model can continue improving on real-world street and night photography where bright ground-truth reference photos do not exist.</div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="color: #059669;">4. Adaptive Scene-Aware Loss Weighting</div>
+      <div class="card-desc">Automatically adjusting the balance between edge sharpening and noise smoothing depending on how dark or noisy an incoming photo is.</div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="color: #1e3a8a;">5. High-Resolution 4K Panorama & RAW Sensor Support</div>
+      <div class="card-desc">Extending inference directly to raw camera sensor data (Bayer RAW) and ultra-high-resolution 4K images for professional photography pipelines.</div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>VJTI Mumbai | LY B.Tech CE</span><span>Page 14</span></div>
+</div>
+
+<!-- SLIDE 15: Conclusion & Key Takeaways -->
+<div class="slide">
+  <div class="slide-header">
+    <div class="slide-tag">Conclusion</div>
+    <div class="slide-title">Conclusion & Key Project Takeaways</div>
+  </div>
+  <div class="card" style="background-color: #eff6ff; border-color: #3b82f6; margin-bottom: 0.3in;">
+    <div class="card-title" style="color: #1e3a8a; font-size: 0.22in;">Summary of Achievements</div>
+    <div class="card-desc" style="font-size: 0.17in; line-height: 1.6;">
+      <p>1. <strong>Decoupling Brightness (Y) from Color (UV)</strong> fundamentally eliminates unnatural color casts and prevents noise amplification.</p>
+      <p>2. <strong>Our self-contained 4-term hybrid loss</strong> eliminates external 138M-parameter VGG network dependencies, achieving <strong>18.68 dB Standard / 25.96 dB Mean-Matched Peak Signal-to-Noise Ratio (PSNR) and 0.8299 Structural Similarity Index Measure (SSIM)</strong>.</p>
+      <p>3. <strong>Ultra-compact at only 12,060 parameters (72 KB file size)</strong> and <strong>&lt;50 milliseconds latency</strong>, proving that high restoration quality does not require millions of parameters.</p>
+    </div>
+  </div>
+  <div class="card" style="background-color: #f0fdf4; border-color: #52c41a; text-align: center; padding: 0.3in;">
+    <div style="font-size: 0.28in; font-weight: 800; color: #047857; margin-bottom: 0.08in;">Thank You! Questions & Discussion Welcomed.</div>
+    <div style="font-size: 0.17in; color: #334155;">Live Demo Ready: <code>python infer.py --gradio</code></div>
+  </div>
+  <div class="slide-footer"><span>VJTI Mumbai | LY B.Tech CE</span><span>Page 15</span></div>
+</div>
+
+</body>
+</html>

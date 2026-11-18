@@ -1,0 +1,41 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# PyTorch checkpoints and model weights (exclude large binaries if needed)
+best_checkpoint.pth
+# Note: Keep lytnet_from_scratch.pth (72 KB) or best_model.pth if desired, or ignore *.pth
+# *.pth
+
+# Large Dataset Archives and Raw Datasets
+data/
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+
+# Evaluation outputs and generated comparison imagery (2,289 images)
+results/all_1000_comparisons/
+results/all_1000_pairs/
+results/comparisons/
+results/*.png
+results/*.jpg
+
+# OS artifacts
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Virtual environments
+venv/
+env/
+.env
+.venv/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
