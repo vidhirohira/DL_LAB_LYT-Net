@@ -354,10 +354,10 @@ def create_pptx():
         p.font.color.rgb = C_DARK
 
     # =========================================================================
-    # SLIDE 8: Layer & 3D Tensor Flow + Upsampling & Fusion Math (Diagram 2)
+    # SLIDE 8: Architecture
     # =========================================================================
     slide8 = prs.slides.add_slide(blank_layout)
-    add_header(slide8, "Layer & 3D Tensor Flow + Upsampling & Fusion Math", "Architecture — Diagram 2")
+    add_header(slide8, "Architecture", "Architecture")
 
     lenet_img = os.path.join(FIG_DIR, "custom_lenet_style_arch.jpeg")
     if os.path.isfile(lenet_img):
@@ -990,11 +990,11 @@ def create_pdf_from_html():
   <div class="slide-footer"><span>VJTI Mumbai | LY B.Tech CE</span><span>Page 7</span></div>
 </div>
 
-<!-- SLIDE 8: Layer & 3D Tensor Flow + Upsampling & Fusion Math (Diagram 2) -->
+<!-- SLIDE 8: Architecture -->
 <div class="slide">
   <div class="slide-header">
-    <div class="slide-tag">Architecture — Diagram 2</div>
-    <div class="slide-title">Layer & 3D Tensor Flow + Upsampling & Fusion Math</div>
+    <div class="slide-tag">Architecture</div>
+    <div class="slide-title">Architecture</div>
   </div>
   <div style="display: grid; grid-template-columns: 1.6fr 1fr; gap: 0.3in; align-items: center;">
     <div>
