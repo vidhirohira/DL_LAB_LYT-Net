@@ -117,51 +117,33 @@ def create_pptx():
     p.font.name = "Arial"
 
     # =========================================================================
-    # SLIDE 2: Problem Statement ONLY (Challenges in Low-Light Imaging)
+    # SLIDE 2: Problem Statement ONLY (1 Box Layout)
     # =========================================================================
     slide2 = prs.slides.add_slide(blank_layout)
     add_header(slide2, "Problem Statement: Challenges in Low-Light Imaging", "Introduction — Problem Statement")
 
-    prob_cards = [
-        ("1. Sensor & Radiometric Degradation", [
-            "Severe photon starvation in night and indoor environments causes drastic loss of dynamic range.",
-            "Camera sensor analog gain (ISO) amplifies low-level electrical noise into aggressive speckle grain and chroma mottling.",
-            "Shadow regions suffer near-total loss of local contrast, surface textures, and fine structural boundaries."
-        ], RGBColor(185, 28, 28), RGBColor(254, 242, 242), RGBColor(252, 165, 165)),
+    add_card(slide2, Inches(0.8), Inches(1.5), Inches(11.733), Inches(5.4), RGBColor(254, 242, 242), RGBColor(252, 165, 165))
+    tb_ps = slide2.shapes.add_textbox(Inches(1.2), Inches(1.9), Inches(10.933), Inches(4.6))
+    tf_ps = tb_ps.text_frame
+    tf_ps.word_wrap = True
 
-        ("2. Failures of Traditional Methods", [
-            "Simple brightness boosting or Histogram Equalization indiscriminately multiplies background noise along with signal.",
-            "Standard Red-Green-Blue (RGB) color processing tightly couples luminance and chrominance.",
-            "Boosting dark RGB values alters delicate channel ratios, generating severe color casts and unnatural hue shifts.",
-            "Filtering noise directly in RGB blurs high-frequency textures and softens sharp physical outlines."
-        ], RGBColor(194, 65, 12), RGBColor(255, 247, 237), RGBColor(254, 215, 170)),
+    p = tf_ps.paragraphs[0]
+    p.text = "Problem Statement"
+    p.font.size = Pt(20)
+    p.font.bold = True
+    p.font.color.rgb = RGBColor(185, 28, 28)
+    p.space_after = Pt(22)
 
-        ("3. Edge Deployment Bottleneck", [
-            "Modern deep restorers (e.g., MIRNet, Retinex-Net, Restormer) require 20M to 35M parameters.",
-            "High computational latency (>800 ms per frame) and massive GPU memory footprints cause excessive battery drain.",
-            "Existing architectures cannot operate in real time (<50 ms) on battery-constrained edge devices and mobile cameras."
-        ], RGBColor(30, 41, 59), C_LIGHT_BG, C_BORDER)
+    ps_pts = [
+        "Photos captured in low-light environments suffer from severe underexposure, poor visibility, amplified sensor noise, and heavy color distortion.",
+        "Standard brightness boosting washes out contrast and amplifies noise, while heavy deep learning models (like large Convolutional Neural Networks or Vision Transformers) require too much compute and memory for real-time mobile or edge deployment."
     ]
-
-    for i, (title, pts, col, bg_col, bdr_col) in enumerate(prob_cards):
-        x = Inches(0.8 + i * 4.0)
-        add_card(slide2, x, Inches(1.5), Inches(3.733), Inches(5.4), bg_col, bdr_col)
-        tb = slide2.shapes.add_textbox(x + Inches(0.18), Inches(1.7), Inches(3.373), Inches(5.0))
-        tf = tb.text_frame
-        tf.word_wrap = True
-        p = tf.paragraphs[0]
-        p.text = title
-        p.font.size = Pt(13)
-        p.font.bold = True
-        p.font.color.rgb = col
-        p.space_after = Pt(8)
-
-        for pt in pts:
-            p = tf.add_paragraph()
-            p.text = f"• {pt}"
-            p.font.size = Pt(10)
-            p.font.color.rgb = C_DARK
-            p.space_before = Pt(6)
+    for pt in ps_pts:
+        p = tf_ps.add_paragraph()
+        p.text = f"• {pt}"
+        p.font.size = Pt(15)
+        p.font.color.rgb = C_DARK
+        p.space_before = Pt(16)
 
     # =========================================================================
     # SLIDE 3: Proposed System: Overview & Key Innovations
@@ -846,36 +828,17 @@ def create_pdf_from_html():
   </div>
 </div>
 
-<!-- SLIDE 2: Problem Statement ONLY (Challenges in Low-Light Imaging) -->
+<!-- SLIDE 2: Problem Statement ONLY (1 Box Layout) -->
 <div class="slide">
   <div class="slide-header">
     <div class="slide-tag">Introduction — Problem Statement</div>
     <div class="slide-title">Problem Statement: Challenges in Low-Light Imaging</div>
   </div>
-  <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.25in;">
-    <div class="card" style="background-color: #fef2f2; border-color: #fca5a5;">
-      <div class="card-title" style="color: #b91c1c; font-size: 0.21in;">1. Sensor & Radiometric Degradation</div>
-      <div class="card-desc" style="font-size: 0.155in; line-height: 1.5;">
-        <p>• <strong>Photon Starvation:</strong> Extreme low-light conditions severely reduce the number of photons hitting the camera sensor.</p>
-        <p>• <strong>Noise Amplification:</strong> Hardware ISO gain amplifies thermal and sensor noise into aggressive speckle grain and chromatic mottling.</p>
-        <p>• <strong>Lost Information:</strong> Deep shadows lose structural contrast, fine textures, and critical object boundaries.</p>
-      </div>
-    </div>
-    <div class="card" style="background-color: #fff7ed; border-color: #fed7aa;">
-      <div class="card-title" style="color: #c2410c; font-size: 0.21in;">2. Failures of Traditional Methods</div>
-      <div class="card-desc" style="font-size: 0.155in; line-height: 1.5;">
-        <p>• <strong>Noise Floor Multiplication:</strong> Histogram Equalization and direct brightness boosting indiscriminately amplify sensor noise.</p>
-        <p>• <strong>Tangled RGB Coupling:</strong> Red-Green-Blue channels entangle brightness with color. Boosting intensities alters channel ratios.</p>
-        <p>• <strong>Color Casts & Blur:</strong> Results in severe color distortion and washed-out highlights, while filtering blurs edge boundaries.</p>
-      </div>
-    </div>
-    <div class="card" style="background-color: #f8fafc; border-color: #cbd5e1;">
-      <div class="card-title" style="color: #0f172a; font-size: 0.21in;">3. Edge Deployment Bottleneck</div>
-      <div class="card-desc" style="font-size: 0.155in; line-height: 1.5;">
-        <p>• <strong>Massive Parameter Footprint:</strong> Deep neural networks (MIRNet, Restormer) require 20M to 35M parameters.</p>
-        <p>• <strong>High Latency & Power:</strong> Processing times exceeding 800 ms per frame drain battery life on portable systems.</p>
-        <p>• <strong>Deployment Infeasibility:</strong> Heavy models cannot operate in real time (&lt;50 ms) on mobile cameras or edge devices.</p>
-      </div>
+  <div class="card" style="background-color: #fef2f2; border-color: #fca5a5; padding: 0.5in 0.6in; height: 5.6in; display: flex; flex-direction: column; justify-content: center;">
+    <div class="card-title" style="color: #b91c1c; font-size: 0.28in; margin-bottom: 0.3in;">Problem Statement</div>
+    <div class="card-desc" style="font-size: 0.22in; line-height: 1.7; color: #1e293b;">
+      <p style="margin-bottom: 0.28in;">• Photos captured in low-light environments suffer from severe underexposure, poor visibility, amplified sensor noise, and heavy color distortion.</p>
+      <p>• Standard brightness boosting washes out contrast and amplifies noise, while heavy deep learning models (like large Convolutional Neural Networks or Vision Transformers) require too much compute and memory for real-time mobile or edge deployment.</p>
     </div>
   </div>
   <div class="slide-footer"><span>VJTI Mumbai | LY B.Tech CE</span><span>Page 2</span></div>
