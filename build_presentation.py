@@ -3,7 +3,8 @@
 Build the final Deep Learning Lab Mini-Project presentation matching exact user instructions:
 - PPTX: 'Vidhi Rohira LY BTECH CE 52:- DL LAB PROJECT.pptx' (via python-pptx, 16:9 widescreen)
 - PDF: 'Vidhi Rohira LY BTECH CE 52:- DL LAB PROJECT.pdf' (via Google Chrome headless, 16:9 widescreen)
-- Exactly 15 slides.
+- Exactly 16 slides (Slide 2: Problem Statement ONLY; Slide 3: Proposed System Overview; Slide 4: Literature Review).
+- ZERO emojis across ALL slides.
 - Zero unexplained short forms across ALL slides.
 - Embedded custom architecture diagrams (custom_block_flow_arch.png and custom_lenet_style_arch.jpeg).
 - Clean spacing, large fonts, and copy to Final_Report_and_PPT/.
@@ -116,79 +117,118 @@ def create_pptx():
     p.font.name = "Arial"
 
     # =========================================================================
-    # SLIDE 2: Problem Statement & Proposed Solution (Overview)
+    # SLIDE 2: Problem Statement ONLY (Challenges in Low-Light Imaging)
     # =========================================================================
     slide2 = prs.slides.add_slide(blank_layout)
-    add_header(slide2, "Problem Statement & Proposed Solution Overview", "Executive Overview")
+    add_header(slide2, "Problem Statement: Challenges in Low-Light Imaging", "Introduction — Problem Statement")
 
-    # Left: Problem Statement
-    add_card(slide2, Inches(0.8), Inches(1.5), Inches(5.7), Inches(5.4), RGBColor(254, 242, 242), RGBColor(252, 165, 165))
-    tb_p = slide2.shapes.add_textbox(Inches(1.0), Inches(1.7), Inches(5.3), Inches(5.0))
-    tf_p = tb_p.text_frame
-    tf_p.word_wrap = True
-    p = tf_p.paragraphs[0]
-    p.text = "❌ Problem Statement"
-    p.font.size = Pt(15)
-    p.font.bold = True
-    p.font.color.rgb = RGBColor(185, 28, 28)
-    p.space_after = Pt(10)
+    prob_cards = [
+        ("1. Sensor & Radiometric Degradation", [
+            "Severe photon starvation in night and indoor environments causes drastic loss of dynamic range.",
+            "Camera sensor analog gain (ISO) amplifies low-level electrical noise into aggressive speckle grain and chroma mottling.",
+            "Shadow regions suffer near-total loss of local contrast, surface textures, and fine structural boundaries."
+        ], RGBColor(185, 28, 28), RGBColor(254, 242, 242), RGBColor(252, 165, 165)),
 
-    p_body = [
-        "Photos captured in low-light environments suffer from severe underexposure, poor visibility, amplified sensor noise, and heavy color distortion.",
-        "Standard brightness boosting washes out contrast and amplifies ugly grain.",
-        "Heavy deep learning models (like large Convolutional Neural Networks (CNNs) or Vision Transformers) require tens of millions of parameters and too much compute/memory for real-time mobile or edge device deployment."
+        ("2. Failures of Traditional Methods", [
+            "Simple brightness boosting or Histogram Equalization indiscriminately multiplies background noise along with signal.",
+            "Standard Red-Green-Blue (RGB) color processing tightly couples luminance and chrominance.",
+            "Boosting dark RGB values alters delicate channel ratios, generating severe color casts and unnatural hue shifts.",
+            "Filtering noise directly in RGB blurs high-frequency textures and softens sharp physical outlines."
+        ], RGBColor(194, 65, 12), RGBColor(255, 247, 237), RGBColor(254, 215, 170)),
+
+        ("3. Edge Deployment Bottleneck", [
+            "Modern deep restorers (e.g., MIRNet, Retinex-Net, Restormer) require 20M to 35M parameters.",
+            "High computational latency (>800 ms per frame) and massive GPU memory footprints cause excessive battery drain.",
+            "Existing architectures cannot operate in real time (<50 ms) on battery-constrained edge devices and mobile cameras."
+        ], RGBColor(30, 41, 59), C_LIGHT_BG, C_BORDER)
     ]
-    for pt in p_body:
-        p = tf_p.add_paragraph()
-        p.text = f"• {pt}"
-        p.font.size = Pt(11)
-        p.font.color.rgb = C_DARK
-        p.space_before = Pt(8)
 
-    # Right: Proposed Solution
-    add_card(slide2, Inches(6.8), Inches(1.5), Inches(5.7), Inches(5.4), RGBColor(240, 253, 244), RGBColor(187, 247, 208))
-    tb_s = slide2.shapes.add_textbox(Inches(7.0), Inches(1.7), Inches(5.3), Inches(5.0))
-    tf_s = tb_s.text_frame
-    tf_s.word_wrap = True
-    p = tf_s.paragraphs[0]
-    p.text = "✅ Proposed Solution"
-    p.font.size = Pt(15)
-    p.font.bold = True
-    p.font.color.rgb = C_EMERALD
-    p.space_after = Pt(10)
+    for i, (title, pts, col, bg_col, bdr_col) in enumerate(prob_cards):
+        x = Inches(0.8 + i * 4.0)
+        add_card(slide2, x, Inches(1.5), Inches(3.733), Inches(5.4), bg_col, bdr_col)
+        tb = slide2.shapes.add_textbox(x + Inches(0.18), Inches(1.7), Inches(3.373), Inches(5.0))
+        tf = tb.text_frame
+        tf.word_wrap = True
+        p = tf.paragraphs[0]
+        p.text = title
+        p.font.size = Pt(13)
+        p.font.bold = True
+        p.font.color.rgb = col
+        p.space_after = Pt(8)
 
-    s_body = [
-        "A lightweight, parameter-efficient deep learning pipeline built on LYT-Net (Lightweight YUV Transformer-based Network).",
-        "Trained from scratch on a unified Low-Light Dataset (LOL-v1 + LOL-v2) using a custom 4-component Hybrid Loss (Smooth L1 + SSIM + Cosine Color + Gradient Edge).",
-        "Delivers natural-color, sharp low-light restoration with minimal computational overhead: only 12,060 parameters, a 72 KB checkpoint, and <50 ms speed."
-    ]
-    for pt in s_body:
-        p = tf_s.add_paragraph()
-        p.text = f"• {pt}"
-        p.font.size = Pt(11)
-        p.font.color.rgb = C_DARK
-        p.space_before = Pt(8)
+        for pt in pts:
+            p = tf.add_paragraph()
+            p.text = f"• {pt}"
+            p.font.size = Pt(10)
+            p.font.color.rgb = C_DARK
+            p.space_before = Pt(6)
 
     # =========================================================================
-    # SLIDE 3: What Already Exists vs. Our Improvements
+    # SLIDE 3: Proposed System: Overview & Key Innovations
     # =========================================================================
     slide3 = prs.slides.add_slide(blank_layout)
-    add_header(slide3, "What Already Exists vs. Our Improvements", "Literature Review & Comparison")
+    add_header(slide3, "Proposed System: Lightweight YUV-Decoupled Network", "Proposed System — Solution Overview")
+
+    prop_cards = [
+        ("1. YUV Color Space Decoupling", [
+            "Decouples raw Red-Green-Blue (RGB) into Luminance (Y - brightness/structure) and Chrominance (UV - color differences).",
+            "Isolates illumination adjustments from color restoration, ensuring noise removal never bleeds into color shifts.",
+            "Completely prevents chromatic distortion, preserving authentic color fidelity across diverse nighttime environments."
+        ], C_BLUE, RGBColor(239, 246, 255), RGBColor(147, 197, 253)),
+
+        ("2. Hybrid CNN–Transformer Design", [
+            "Luminance (Y) Branch: Lightweight Multi-Head Self-Attention (MHSA) on pooled 16×16 spatial tokens models global scene lighting efficiently.",
+            "Chrominance (UV) Branch: Dual Channel-Wise Denoiser (CWD) CNN blocks clean color grain at full 256×256 spatial resolution.",
+            "Multi-Stage Squeeze and Excite Fusion (MSEF): Dynamically recalibrates all 24 feature maps before outputting clean RGB."
+        ], C_EMERALD, RGBColor(240, 253, 244), RGBColor(167, 243, 208)),
+
+        ("3. Compact Footprint & Hybrid Loss", [
+            "Ultra-Lightweight: Only 12,060 parameters (~72 KB file size) and <50 ms latency on standard hardware.",
+            "Custom 4-Term Hybrid Loss: Combines Smooth L1, Structural Similarity Index Measure (SSIM), Cosine Color, and Horizontal Edge losses.",
+            "Zero VGG Dependency: Trains fully from scratch for 100 epochs without requiring heavy external 138M pre-trained networks."
+        ], C_PURPLE, RGBColor(250, 245, 255), RGBColor(216, 180, 254))
+    ]
+
+    for i, (title, pts, col, bg_col, bdr_col) in enumerate(prop_cards):
+        x = Inches(0.8 + i * 4.0)
+        add_card(slide3, x, Inches(1.5), Inches(3.733), Inches(5.4), bg_col, bdr_col)
+        tb = slide3.shapes.add_textbox(x + Inches(0.18), Inches(1.7), Inches(3.373), Inches(5.0))
+        tf = tb.text_frame
+        tf.word_wrap = True
+        p = tf.paragraphs[0]
+        p.text = title
+        p.font.size = Pt(13)
+        p.font.bold = True
+        p.font.color.rgb = col
+        p.space_after = Pt(8)
+
+        for pt in pts:
+            p = tf.add_paragraph()
+            p.text = f"• {pt}"
+            p.font.size = Pt(10)
+            p.font.color.rgb = C_DARK
+            p.space_before = Pt(6)
+
+    # =========================================================================
+    # SLIDE 4: What Already Exists vs. Our Improvements
+    # =========================================================================
+    slide4 = prs.slides.add_slide(blank_layout)
+    add_header(slide4, "What Already Exists vs. Our Improvements", "Literature Review & Comparison")
 
     comps = [
-        ("Basic Brightness Filters (Histogram Equalization, CLAHE, LIME)", "Hand-crafted mathematical stretching of pixel values", "Fast (<15 ms)", "❌ Severely blows up camera noise grain; washes out natural colors."),
-        ("Heavy RGB Convolutional Neural Networks (Retinex-Net, KinD, MIRNet)", "Deep Convolutional Neural Networks operating in tangled Red-Green-Blue (2M–31.8M parameters)", "Slow (250–1,800 ms)", "❌ High memory footprint; tangled color channels cause unnatural color casts."),
-        ("Slow Vision Transformers (Restormer, LLFormer)", "Global Multi-Head Self-Attention on every single pixel (26M–34.5M parameters)", "Very Slow (850+ ms)", "❌ Massive compute overhead; impossible for real-time mobile camera preview."),
-        ("Our Lightweight LYT-Net (This Project)", "Luminance–Chrominance (YUV) Decoupling + Pooled Attention + 4-Loss (~12K parameters)", "⚡ Real-Time (<50 ms)", "✅ Clean colors, sharp edges, 72 KB file, zero external VGG network dependency!")
+        ("Basic Brightness Filters (Histogram Equalization, CLAHE, LIME)", "Hand-crafted mathematical stretching of pixel values", "Fast (<15 ms)", "Drawback: Severely blows up camera noise grain; washes out natural colors."),
+        ("Heavy RGB Convolutional Neural Networks (Retinex-Net, KinD, MIRNet)", "Deep Convolutional Neural Networks operating in tangled Red-Green-Blue (2M–31.8M parameters)", "Slow (250–1,800 ms)", "Drawback: High memory footprint; tangled color channels cause unnatural color casts."),
+        ("Slow Vision Transformers (Restormer, LLFormer)", "Global Multi-Head Self-Attention on every single pixel (26M–34.5M parameters)", "Very Slow (850+ ms)", "Drawback: Massive compute overhead; impossible for real-time mobile camera preview."),
+        ("Our Lightweight LYT-Net (This Project)", "Luminance–Chrominance (YUV) Decoupling + Pooled Attention + 4-Loss (~12K parameters)", "Real-Time (<50 ms)", "Advantage: Clean colors, sharp edges, 72 KB file, zero external VGG network dependency!")
     ]
 
     for i, (name, how, speed, verdict) in enumerate(comps):
         y = Inches(1.5 + i * 1.35)
         bg_col = RGBColor(239, 246, 255) if i == 3 else C_LIGHT_BG
         bdr_col = RGBColor(59, 130, 246) if i == 3 else C_BORDER
-        add_card(slide3, Inches(0.8), y, Inches(11.733), Inches(1.22), bg_col, bdr_col)
+        add_card(slide4, Inches(0.8), y, Inches(11.733), Inches(1.22), bg_col, bdr_col)
 
-        tb = slide3.shapes.add_textbox(Inches(1.0), y + Inches(0.1), Inches(11.333), Inches(1.0))
+        tb = slide4.shapes.add_textbox(Inches(1.0), y + Inches(0.1), Inches(11.333), Inches(1.0))
         tf = tb.text_frame
         tf.word_wrap = True
         p0 = tf.paragraphs[0]
@@ -207,17 +247,17 @@ def create_pptx():
         p2.font.color.rgb = C_EMERALD if i == 3 else RGBColor(185, 28, 28)
 
     # =========================================================================
-    # SLIDE 4: Proposed System — End-to-End Pipeline Flowchart
+    # SLIDE 5: Proposed System — End-to-End Pipeline Flowchart
     # =========================================================================
-    slide4 = prs.slides.add_slide(blank_layout)
-    add_header(slide4, "Proposed System: End-to-End Engineering Pipeline", "Methodology — Flowchart")
+    slide5 = prs.slides.add_slide(blank_layout)
+    add_header(slide5, "Proposed System: End-to-End Engineering Pipeline", "Methodology — Flowchart")
 
     pipe_img = os.path.join(FIG_DIR, "fig1_pipeline_flowchart.png")
     if os.path.isfile(pipe_img):
-        slide4.shapes.add_picture(pipe_img, Inches(0.8), Inches(1.5), Inches(11.733), Inches(3.6))
+        slide5.shapes.add_picture(pipe_img, Inches(0.8), Inches(1.5), Inches(11.733), Inches(3.6))
 
-    add_card(slide4, Inches(0.8), Inches(5.3), Inches(11.733), Inches(1.7), C_LIGHT_BG, C_BORDER)
-    tb_pf = slide4.shapes.add_textbox(Inches(1.0), Inches(5.4), Inches(11.333), Inches(1.5))
+    add_card(slide5, Inches(0.8), Inches(5.3), Inches(11.733), Inches(1.7), C_LIGHT_BG, C_BORDER)
+    tb_pf = slide5.shapes.add_textbox(Inches(1.0), Inches(5.4), Inches(11.333), Inches(1.5))
     tf_pf = tb_pf.text_frame
     tf_pf.word_wrap = True
     p = tf_pf.paragraphs[0]
@@ -240,17 +280,17 @@ def create_pptx():
         p.font.color.rgb = C_DARK
 
     # =========================================================================
-    # SLIDE 5: Why Luminance–Chrominance Color Space (YUV)?
+    # SLIDE 6: Why Luminance–Chrominance Color Space (YUV)?
     # =========================================================================
-    slide5 = prs.slides.add_slide(blank_layout)
-    add_header(slide5, "Why Luminance–Chrominance Color Space (YUV)?", "Methodology — Color Representation")
+    slide6 = prs.slides.add_slide(blank_layout)
+    add_header(slide6, "Why Luminance–Chrominance Color Space (YUV)?", "Methodology — Color Representation")
 
-    add_card(slide5, Inches(0.8), Inches(1.5), Inches(5.7), Inches(5.4), RGBColor(254, 242, 242), RGBColor(252, 165, 165))
-    tb_rgb = slide5.shapes.add_textbox(Inches(1.0), Inches(1.7), Inches(5.3), Inches(5.0))
+    add_card(slide6, Inches(0.8), Inches(1.5), Inches(5.7), Inches(5.4), RGBColor(254, 242, 242), RGBColor(252, 165, 165))
+    tb_rgb = slide6.shapes.add_textbox(Inches(1.0), Inches(1.7), Inches(5.3), Inches(5.0))
     tf_rgb = tb_rgb.text_frame
     tf_rgb.word_wrap = True
     p = tf_rgb.paragraphs[0]
-    p.text = "❌ Tangled Red-Green-Blue (RGB) Space"
+    p.text = "Drawbacks of Tangled Red-Green-Blue (RGB) Space"
     p.font.size = Pt(14)
     p.font.bold = True
     p.font.color.rgb = RGBColor(185, 28, 28)
@@ -268,12 +308,12 @@ def create_pptx():
         p.font.color.rgb = C_DARK
         p.space_before = Pt(8)
 
-    add_card(slide5, Inches(6.8), Inches(1.5), Inches(5.7), Inches(5.4), RGBColor(240, 253, 244), RGBColor(187, 247, 208))
-    tb_yuv = slide5.shapes.add_textbox(Inches(7.0), Inches(1.7), Inches(5.3), Inches(5.0))
+    add_card(slide6, Inches(6.8), Inches(1.5), Inches(5.7), Inches(5.4), RGBColor(240, 253, 244), RGBColor(187, 247, 208))
+    tb_yuv = slide6.shapes.add_textbox(Inches(7.0), Inches(1.7), Inches(5.3), Inches(5.0))
     tf_yuv = tb_yuv.text_frame
     tf_yuv.word_wrap = True
     p = tf_yuv.paragraphs[0]
-    p.text = "✅ Separated Luminance–Chrominance (YUV)"
+    p.text = "Advantages of Separated Luminance–Chrominance (YUV)"
     p.font.size = Pt(14)
     p.font.bold = True
     p.font.color.rgb = C_EMERALD
@@ -293,17 +333,17 @@ def create_pptx():
         p.space_before = Pt(8)
 
     # =========================================================================
-    # SLIDE 6: LYT-Net Dual-Branch Architecture Overview (Diagram 1)
+    # SLIDE 7: LYT-Net Dual-Branch Architecture Overview (Diagram 1)
     # =========================================================================
-    slide6 = prs.slides.add_slide(blank_layout)
-    add_header(slide6, "LYT-Net Dual-Branch Architecture Overview", "Architecture — Diagram 1")
+    slide7 = prs.slides.add_slide(blank_layout)
+    add_header(slide7, "LYT-Net Dual-Branch Architecture Overview", "Architecture — Diagram 1")
 
     blk_img = os.path.join(FIG_DIR, "custom_block_flow_arch.png")
     if os.path.isfile(blk_img):
-        slide6.shapes.add_picture(blk_img, Inches(0.8), Inches(1.5), Inches(7.5), Inches(5.4))
+        slide7.shapes.add_picture(blk_img, Inches(0.8), Inches(1.5), Inches(7.5), Inches(5.4))
 
-    add_card(slide6, Inches(8.5), Inches(1.5), Inches(4.0), Inches(5.4), C_LIGHT_BG, C_BORDER)
-    tb_b = slide6.shapes.add_textbox(Inches(8.7), Inches(1.7), Inches(3.6), Inches(5.0))
+    add_card(slide7, Inches(8.5), Inches(1.5), Inches(4.0), Inches(5.4), C_LIGHT_BG, C_BORDER)
+    tb_b = slide7.shapes.add_textbox(Inches(8.7), Inches(1.7), Inches(3.6), Inches(5.0))
     tf_b = tb_b.text_frame
     tf_b.word_wrap = True
 
@@ -332,17 +372,17 @@ def create_pptx():
         p.font.color.rgb = C_DARK
 
     # =========================================================================
-    # SLIDE 7: Layer & 3D Tensor Flow + Upsampling & Fusion Math (Diagram 2)
+    # SLIDE 8: Layer & 3D Tensor Flow + Upsampling & Fusion Math (Diagram 2)
     # =========================================================================
-    slide7 = prs.slides.add_slide(blank_layout)
-    add_header(slide7, "Layer & 3D Tensor Flow + Upsampling & Fusion Math", "Architecture — Diagram 2")
+    slide8 = prs.slides.add_slide(blank_layout)
+    add_header(slide8, "Layer & 3D Tensor Flow + Upsampling & Fusion Math", "Architecture — Diagram 2")
 
     lenet_img = os.path.join(FIG_DIR, "custom_lenet_style_arch.jpeg")
     if os.path.isfile(lenet_img):
-        slide7.shapes.add_picture(lenet_img, Inches(0.8), Inches(1.5), Inches(7.5), Inches(5.4))
+        slide8.shapes.add_picture(lenet_img, Inches(0.8), Inches(1.5), Inches(7.5), Inches(5.4))
 
-    add_card(slide7, Inches(8.5), Inches(1.5), Inches(4.0), Inches(5.4), C_LIGHT_BG, C_BORDER)
-    tb_t = slide7.shapes.add_textbox(Inches(8.7), Inches(1.65), Inches(3.6), Inches(5.1))
+    add_card(slide8, Inches(8.5), Inches(1.5), Inches(4.0), Inches(5.4), C_LIGHT_BG, C_BORDER)
+    tb_t = slide8.shapes.add_textbox(Inches(8.7), Inches(1.65), Inches(3.6), Inches(5.1))
     tf_t = tb_t.text_frame
     tf_t.word_wrap = True
 
@@ -361,24 +401,24 @@ def create_pptx():
     for title, desc in t_pts:
         p = tf_t.add_paragraph()
         p.text = title
-        p.font.size = Pt(10)
+        p.font.size = Pt(9.5)
         p.font.bold = True
         p.font.color.rgb = C_ACCENT
-        p.space_before = Pt(5)
+        p.space_before = Pt(6)
         p = tf_t.add_paragraph()
         p.text = desc
-        p.font.size = Pt(9)
+        p.font.size = Pt(8.5)
         p.font.color.rgb = C_DARK
 
     # =========================================================================
-    # SLIDE 8: Core Building Blocks & Custom 4-Term Hybrid Loss
+    # SLIDE 9: Core Building Blocks (MHSA, CWD, MSEF) & Custom 4-Term Hybrid Loss
     # =========================================================================
-    slide8 = prs.slides.add_slide(blank_layout)
-    add_header(slide8, "Core Building Blocks & Custom 4-Term Hybrid Loss", "Methodology — Modules & Losses")
+    slide9 = prs.slides.add_slide(blank_layout)
+    add_header(slide9, "Core Building Blocks & Custom 4-Term Hybrid Loss", "Methodology — Modules & Loss")
 
     # 3 Blocks on Left
-    add_card(slide8, Inches(0.8), Inches(1.5), Inches(5.7), Inches(5.4), C_LIGHT_BG, C_BORDER)
-    tb_m = slide8.shapes.add_textbox(Inches(1.0), Inches(1.7), Inches(5.3), Inches(5.0))
+    add_card(slide9, Inches(0.8), Inches(1.5), Inches(5.7), Inches(5.4), C_LIGHT_BG, C_BORDER)
+    tb_m = slide9.shapes.add_textbox(Inches(1.0), Inches(1.7), Inches(5.3), Inches(5.0))
     tf_m = tb_m.text_frame
     tf_m.word_wrap = True
     p = tf_m.paragraphs[0]
@@ -405,8 +445,8 @@ def create_pptx():
         p.font.color.rgb = C_DARK
 
     # 4 Losses on Right
-    add_card(slide8, Inches(6.8), Inches(1.5), Inches(5.7), Inches(5.4), RGBColor(239, 246, 255), RGBColor(147, 197, 253))
-    tb_l = slide8.shapes.add_textbox(Inches(7.0), Inches(1.7), Inches(5.3), Inches(5.0))
+    add_card(slide9, Inches(6.8), Inches(1.5), Inches(5.7), Inches(5.4), RGBColor(239, 246, 255), RGBColor(147, 197, 253))
+    tb_l = slide9.shapes.add_textbox(Inches(7.0), Inches(1.7), Inches(5.3), Inches(5.0))
     tf_l = tb_l.text_frame
     tf_l.word_wrap = True
     p = tf_l.paragraphs[0]
@@ -435,10 +475,10 @@ def create_pptx():
         p.font.color.rgb = C_DARK
 
     # =========================================================================
-    # SLIDE 9: Dataset Used (Unified Multi-Domain Low-Light Benchmark)
+    # SLIDE 10: Dataset Used (Unified Multi-Domain Low-Light Benchmark)
     # =========================================================================
-    slide9 = prs.slides.add_slide(blank_layout)
-    add_header(slide9, "Dataset Used: Unified Multi-Domain Low-Light Benchmark", "Dataset")
+    slide10 = prs.slides.add_slide(blank_layout)
+    add_header(slide10, "Dataset Used: Unified Multi-Domain Low-Light Benchmark", "Dataset")
 
     ds_data = [
         ("Low-Light Dataset v1 (LOL-v1)", "500 Total Pairs (485 Train / 15 Test)", "Captured with real DSLR cameras across real indoor and outdoor scenes with varied ISO gain and exposure times.", C_BLUE),
@@ -448,8 +488,8 @@ def create_pptx():
 
     for i, (name, split, desc, col) in enumerate(ds_data):
         x = Inches(0.8 + i * 4.0)
-        add_card(slide9, x, Inches(1.5), Inches(3.733), Inches(3.6), C_LIGHT_BG, col)
-        tb = slide9.shapes.add_textbox(x + Inches(0.2), Inches(1.7), Inches(3.333), Inches(3.2))
+        add_card(slide10, x, Inches(1.5), Inches(3.733), Inches(3.6), C_LIGHT_BG, col)
+        tb = slide10.shapes.add_textbox(x + Inches(0.2), Inches(1.7), Inches(3.333), Inches(3.2))
         tf = tb.text_frame
         tf.word_wrap = True
         p = tf.paragraphs[0]
@@ -470,8 +510,8 @@ def create_pptx():
         p.font.color.rgb = C_DARK
 
     # Bottom Callout: Total Scale
-    add_card(slide9, Inches(0.8), Inches(5.4), Inches(11.733), Inches(1.5), RGBColor(240, 253, 244), RGBColor(187, 247, 208))
-    tb_ds = slide9.shapes.add_textbox(Inches(1.0), Inches(5.5), Inches(11.333), Inches(1.3))
+    add_card(slide10, Inches(0.8), Inches(5.4), Inches(11.733), Inches(1.5), RGBColor(240, 253, 244), RGBColor(187, 247, 208))
+    tb_ds = slide10.shapes.add_textbox(Inches(1.0), Inches(5.5), Inches(11.333), Inches(1.3))
     tf_ds = tb_ds.text_frame
     tf_ds.word_wrap = True
     p = tf_ds.paragraphs[0]
@@ -485,17 +525,17 @@ def create_pptx():
     p.font.color.rgb = C_DARK
 
     # =========================================================================
-    # SLIDE 10: 100-Epoch Training Convergence & Graph Explanation
+    # SLIDE 11: 100-Epoch Training Convergence & Graph Explanation
     # =========================================================================
-    slide10 = prs.slides.add_slide(blank_layout)
-    add_header(slide10, "100-Epoch Training Convergence & Graph Explanation", "Results — Training Curves")
+    slide11 = prs.slides.add_slide(blank_layout)
+    add_header(slide11, "100-Epoch Training Convergence & Graph Explanation", "Results — Training Curves")
 
     curve_img = os.path.join(FIG_DIR, "fig4_training_curves.png")
     if os.path.isfile(curve_img):
-        slide10.shapes.add_picture(curve_img, Inches(0.8), Inches(1.5), Inches(7.3), Inches(5.4))
+        slide11.shapes.add_picture(curve_img, Inches(0.8), Inches(1.5), Inches(7.3), Inches(5.4))
 
-    add_card(slide10, Inches(8.3), Inches(1.5), Inches(4.2), Inches(5.4), C_LIGHT_BG, C_BORDER)
-    tb_tc = slide10.shapes.add_textbox(Inches(8.5), Inches(1.6), Inches(3.8), Inches(5.2))
+    add_card(slide11, Inches(8.3), Inches(1.5), Inches(4.2), Inches(5.4), C_LIGHT_BG, C_BORDER)
+    tb_tc = slide11.shapes.add_textbox(Inches(8.5), Inches(1.6), Inches(3.8), Inches(5.2))
     tf_tc = tb_tc.text_frame
     tf_tc.word_wrap = True
 
@@ -524,17 +564,17 @@ def create_pptx():
         p.font.color.rgb = C_DARK
 
     # =========================================================================
-    # SLIDE 11: Quantitative Benchmark Evaluation & Graph Explanation
+    # SLIDE 12: Quantitative Benchmark Evaluation & Graph Explanation
     # =========================================================================
-    slide11 = prs.slides.add_slide(blank_layout)
-    add_header(slide11, "Quantitative Benchmark Evaluation & Graph Explanation", "Results — Evaluation")
+    slide12 = prs.slides.add_slide(blank_layout)
+    add_header(slide12, "Quantitative Benchmark Evaluation & Graph Explanation", "Results — Evaluation")
 
     bar_img = os.path.join(FIG_DIR, "fig5_subset_benchmarks.png")
     if os.path.isfile(bar_img):
-        slide11.shapes.add_picture(bar_img, Inches(0.8), Inches(1.5), Inches(6.8), Inches(5.4))
+        slide12.shapes.add_picture(bar_img, Inches(0.8), Inches(1.5), Inches(6.8), Inches(5.4))
 
-    add_card(slide11, Inches(7.8), Inches(1.5), Inches(4.7), Inches(5.4), C_LIGHT_BG, C_BORDER)
-    tb_qe = slide11.shapes.add_textbox(Inches(8.0), Inches(1.7), Inches(4.3), Inches(5.0))
+    add_card(slide12, Inches(7.8), Inches(1.5), Inches(4.7), Inches(5.4), C_LIGHT_BG, C_BORDER)
+    tb_qe = slide12.shapes.add_textbox(Inches(8.0), Inches(1.7), Inches(4.3), Inches(5.0))
     tf_qe = tb_qe.text_frame
     tf_qe.word_wrap = True
 
@@ -562,10 +602,10 @@ def create_pptx():
         p.font.color.rgb = C_DARK
 
     # =========================================================================
-    # SLIDE 12: Qualitative Visual Comparisons (Part 1)
+    # SLIDE 13: Qualitative Visual Comparisons (Part 1)
     # =========================================================================
-    slide12 = prs.slides.add_slide(blank_layout)
-    add_header(slide12, "Qualitative Visual Results: Real Benchmark Test Samples", "Results — Visual Samples 1–3")
+    slide13 = prs.slides.add_slide(blank_layout)
+    add_header(slide13, "Qualitative Visual Results: Real Benchmark Test Samples", "Results — Visual Samples 1–3")
 
     s1 = [
         ("visual_sample_1.png", Inches(1.5), "Sample 1: LOL-v1 Indoor Scene — Pitch-black room lit cleanly with vivid color and zero noise blowout (23.93 dB PSNR | 0.8710 SSIM)."),
@@ -573,29 +613,6 @@ def create_pptx():
         ("visual_sample_3.png", Inches(5.3), "Sample 3: LOL-v2 Real Hallway — Channel-Wise Denoiser filters heavy grain; pooled attention captures hallway lighting (27.76 dB Mean-Matched PSNR).")
     ]
     for fname, ypos, caption in s1:
-        fpath = os.path.join(FIG_DIR, fname)
-        if os.path.isfile(fpath):
-            slide12.shapes.add_picture(fpath, Inches(0.8), ypos, Inches(7.5), Inches(1.75))
-            add_card(slide12, Inches(8.5), ypos, Inches(4.0), Inches(1.75), C_LIGHT_BG, C_BORDER)
-            tb = slide12.shapes.add_textbox(Inches(8.7), ypos + Inches(0.15), Inches(3.6), Inches(1.45))
-            tf = tb.text_frame
-            tf.word_wrap = True
-            p = tf.paragraphs[0]
-            p.text = caption
-            p.font.size = Pt(9.5)
-            p.font.color.rgb = C_DARK
-
-    # =========================================================================
-    # SLIDE 13: Qualitative Visual Comparisons (Part 2) & Live Demo
-    # =========================================================================
-    slide13 = prs.slides.add_slide(blank_layout)
-    add_header(slide13, "Visual Results (Part 2) & Live Interactive Demonstration", "Results — Visuals & Demo")
-
-    s2 = [
-        ("visual_sample_4.png", Inches(1.5), "Sample 4: LOL-v2 Real Classroom — Complex ambient light bounce restored naturally without halo artifacts (23.92 dB PSNR | 0.8552 SSIM)."),
-        ("visual_sample_5.png", Inches(3.4), "Sample 5: LOL-v2 Synthetic Dynamic Range — Non-uniform shadows lifted cleanly with true surface colors (20.26 dB PSNR | 0.8137 SSIM).")
-    ]
-    for fname, ypos, caption in s2:
         fpath = os.path.join(FIG_DIR, fname)
         if os.path.isfile(fpath):
             slide13.shapes.add_picture(fpath, Inches(0.8), ypos, Inches(7.5), Inches(1.75))
@@ -608,13 +625,36 @@ def create_pptx():
             p.font.size = Pt(9.5)
             p.font.color.rgb = C_DARK
 
-    # Live Demo Card
-    add_card(slide13, Inches(0.8), Inches(5.3), Inches(11.733), Inches(1.6), RGBColor(240, 253, 244), RGBColor(52, 211, 153))
-    tb_demo = slide13.shapes.add_textbox(Inches(1.0), Inches(5.45), Inches(11.333), Inches(1.3))
+    # =========================================================================
+    # SLIDE 14: Qualitative Visual Comparisons (Part 2) & Live Demo
+    # =========================================================================
+    slide14 = prs.slides.add_slide(blank_layout)
+    add_header(slide14, "Visual Results (Part 2) & Live Interactive Demonstration", "Results — Visuals & Demo")
+
+    s2 = [
+        ("visual_sample_4.png", Inches(1.5), "Sample 4: LOL-v2 Real Classroom — Complex ambient light bounce restored naturally without halo artifacts (23.92 dB PSNR | 0.8552 SSIM)."),
+        ("visual_sample_5.png", Inches(3.4), "Sample 5: LOL-v2 Synthetic Dynamic Range — Non-uniform shadows lifted cleanly with true surface colors (20.26 dB PSNR | 0.8137 SSIM).")
+    ]
+    for fname, ypos, caption in s2:
+        fpath = os.path.join(FIG_DIR, fname)
+        if os.path.isfile(fpath):
+            slide14.shapes.add_picture(fpath, Inches(0.8), ypos, Inches(7.5), Inches(1.75))
+            add_card(slide14, Inches(8.5), ypos, Inches(4.0), Inches(1.75), C_LIGHT_BG, C_BORDER)
+            tb = slide14.shapes.add_textbox(Inches(8.7), ypos + Inches(0.15), Inches(3.6), Inches(1.45))
+            tf = tb.text_frame
+            tf.word_wrap = True
+            p = tf.paragraphs[0]
+            p.text = caption
+            p.font.size = Pt(9.5)
+            p.font.color.rgb = C_DARK
+
+    # Live Demo Card (Zero Emojis)
+    add_card(slide14, Inches(0.8), Inches(5.3), Inches(11.733), Inches(1.6), RGBColor(240, 253, 244), RGBColor(52, 211, 153))
+    tb_demo = slide14.shapes.add_textbox(Inches(1.0), Inches(5.45), Inches(11.333), Inches(1.3))
     tf_demo = tb_demo.text_frame
     tf_demo.word_wrap = True
     p = tf_demo.paragraphs[0]
-    p.text = "🚀 LIVE INTERACTIVE VIVA DEMONSTRATION TOOL: python infer.py --gradio"
+    p.text = "LIVE INTERACTIVE VIVA DEMONSTRATION TOOL: python infer.py --gradio"
     p.font.size = Pt(11)
     p.font.bold = True
     p.font.color.rgb = C_EMERALD
@@ -624,10 +664,10 @@ def create_pptx():
     p.font.color.rgb = C_DARK
 
     # =========================================================================
-    # SLIDE 14: Future Scope (Expanded & Properly Explained)
+    # SLIDE 15: Future Scope (Expanded & Properly Explained)
     # =========================================================================
-    slide14 = prs.slides.add_slide(blank_layout)
-    add_header(slide14, "Future Scope: 5 Concrete Technological Extensions", "Future Scope")
+    slide15 = prs.slides.add_slide(blank_layout)
+    add_header(slide15, "Future Scope: 5 Concrete Technological Extensions", "Future Scope")
 
     fscope = [
         ("1. Mobile & Edge Quantization", "Converting 72 KB weights into 8-bit Integer (INT8) format using ONNX / TensorFlow Lite so the model runs directly inside smartphone camera chips in under 15 milliseconds.", C_BLUE),
@@ -639,8 +679,8 @@ def create_pptx():
 
     for i, (title, desc, col) in enumerate(fscope):
         y = Inches(1.5 + i * 1.1)
-        add_card(slide14, Inches(0.8), y, Inches(11.733), Inches(0.98), C_LIGHT_BG, col)
-        tb = slide14.shapes.add_textbox(Inches(1.0), y + Inches(0.1), Inches(11.333), Inches(0.8))
+        add_card(slide15, Inches(0.8), y, Inches(11.733), Inches(0.98), C_LIGHT_BG, col)
+        tb = slide15.shapes.add_textbox(Inches(1.0), y + Inches(0.1), Inches(11.333), Inches(0.8))
         tf = tb.text_frame
         tf.word_wrap = True
         p0 = tf.paragraphs[0]
@@ -654,13 +694,13 @@ def create_pptx():
         p1.font.color.rgb = C_DARK
 
     # =========================================================================
-    # SLIDE 15: Conclusion & Key Takeaways
+    # SLIDE 16: Conclusion & Key Takeaways
     # =========================================================================
-    slide15 = prs.slides.add_slide(blank_layout)
-    add_header(slide15, "Conclusion & Key Project Takeaways", "Conclusion")
+    slide16 = prs.slides.add_slide(blank_layout)
+    add_header(slide16, "Conclusion & Key Project Takeaways", "Conclusion")
 
-    add_card(slide15, Inches(0.8), Inches(1.5), Inches(11.733), Inches(3.6), RGBColor(239, 246, 255), RGBColor(59, 130, 246))
-    tb_c = slide15.shapes.add_textbox(Inches(1.1), Inches(1.8), Inches(11.133), Inches(3.1))
+    add_card(slide16, Inches(0.8), Inches(1.5), Inches(11.733), Inches(3.6), RGBColor(239, 246, 255), RGBColor(59, 130, 246))
+    tb_c = slide16.shapes.add_textbox(Inches(1.1), Inches(1.8), Inches(11.133), Inches(3.1))
     tf_c = tb_c.text_frame
     tf_c.word_wrap = True
     p = tf_c.paragraphs[0]
@@ -682,8 +722,8 @@ def create_pptx():
         p.space_before = Pt(10)
 
     # Thank you card
-    add_card(slide15, Inches(0.8), Inches(5.4), Inches(11.733), Inches(1.5), RGBColor(240, 253, 244), RGBColor(52, 211, 153))
-    tb_ty = slide15.shapes.add_textbox(Inches(1.0), Inches(5.6), Inches(11.333), Inches(1.1))
+    add_card(slide16, Inches(0.8), Inches(5.4), Inches(11.733), Inches(1.5), RGBColor(240, 253, 244), RGBColor(52, 211, 153))
+    tb_ty = slide16.shapes.add_textbox(Inches(1.0), Inches(5.6), Inches(11.333), Inches(1.1))
     tf_ty = tb_ty.text_frame
     tf_ty.word_wrap = True
     p = tf_ty.paragraphs[0]
@@ -704,7 +744,7 @@ def create_pptx():
 
 
 # =============================================================================
-# Generate 16:9 Widescreen HTML Slides & Compile to PDF
+# Generate 16:9 Widescreen HTML Slides & Compile to PDF (16 Slides, Zero Emojis)
 # =============================================================================
 def create_pdf_from_html():
     html_content = """<!DOCTYPE html>
@@ -740,12 +780,10 @@ def create_pdf_from_html():
     overflow: hidden;
   }
   .slide-header {
-    border-bottom: 2px solid #e2e8f0;
-    padding-bottom: 0.12in;
-    margin-bottom: 0.25in;
+    margin-bottom: 0.28in;
   }
   .slide-tag {
-    font-size: 0.16in;
+    font-size: 0.15in;
     font-weight: 700;
     color: #2563eb;
     text-transform: uppercase;
@@ -808,34 +846,77 @@ def create_pdf_from_html():
   </div>
 </div>
 
-<!-- SLIDE 2: Problem Statement & Proposed Solution Overview -->
+<!-- SLIDE 2: Problem Statement ONLY (Challenges in Low-Light Imaging) -->
 <div class="slide">
   <div class="slide-header">
-    <div class="slide-tag">Executive Overview</div>
-    <div class="slide-title">Problem Statement & Proposed Solution Overview</div>
+    <div class="slide-tag">Introduction — Problem Statement</div>
+    <div class="slide-title">Problem Statement: Challenges in Low-Light Imaging</div>
   </div>
-  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.35in;">
+  <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.25in;">
     <div class="card" style="background-color: #fef2f2; border-color: #fca5a5;">
-      <div class="card-title" style="color: #b91c1c; font-size: 0.24in;">❌ Problem Statement</div>
-      <div class="card-desc" style="font-size: 0.175in; line-height: 1.55;">
-        <p>• Photos captured in low-light environments suffer from severe underexposure, poor visibility, amplified sensor noise, and heavy color distortion.</p>
-        <p>• Standard brightness boosting washes out contrast and amplifies ugly grain.</p>
-        <p>• Heavy deep learning models (like large Convolutional Neural Networks (CNNs) or Vision Transformers) require tens of millions of parameters and too much compute/memory for real-time mobile or edge device deployment.</p>
+      <div class="card-title" style="color: #b91c1c; font-size: 0.21in;">1. Sensor & Radiometric Degradation</div>
+      <div class="card-desc" style="font-size: 0.155in; line-height: 1.5;">
+        <p>• <strong>Photon Starvation:</strong> Extreme low-light conditions severely reduce the number of photons hitting the camera sensor.</p>
+        <p>• <strong>Noise Amplification:</strong> Hardware ISO gain amplifies thermal and sensor noise into aggressive speckle grain and chromatic mottling.</p>
+        <p>• <strong>Lost Information:</strong> Deep shadows lose structural contrast, fine textures, and critical object boundaries.</p>
       </div>
     </div>
-    <div class="card" style="background-color: #f0fdf4; border-color: #86efac;">
-      <div class="card-title" style="color: #047857; font-size: 0.24in;">✅ Proposed Solution</div>
-      <div class="card-desc" style="font-size: 0.175in; line-height: 1.55;">
-        <p>• A lightweight, parameter-efficient deep learning pipeline built on LYT-Net (Lightweight YUV Transformer-based Network).</p>
-        <p>• Trained from scratch on a unified Low-Light Dataset (LOL-v1 + LOL-v2) using a custom 4-component Hybrid Loss (Smooth L1 + SSIM + Cosine Color + Gradient Edge).</p>
-        <p>• Delivers natural-color, sharp low-light restoration with minimal computational overhead: only <strong>12,060 parameters, a 72 KB checkpoint, and &lt;50 milliseconds speed</strong>.</p>
+    <div class="card" style="background-color: #fff7ed; border-color: #fed7aa;">
+      <div class="card-title" style="color: #c2410c; font-size: 0.21in;">2. Failures of Traditional Methods</div>
+      <div class="card-desc" style="font-size: 0.155in; line-height: 1.5;">
+        <p>• <strong>Noise Floor Multiplication:</strong> Histogram Equalization and direct brightness boosting indiscriminately amplify sensor noise.</p>
+        <p>• <strong>Tangled RGB Coupling:</strong> Red-Green-Blue channels entangle brightness with color. Boosting intensities alters channel ratios.</p>
+        <p>• <strong>Color Casts & Blur:</strong> Results in severe color distortion and washed-out highlights, while filtering blurs edge boundaries.</p>
+      </div>
+    </div>
+    <div class="card" style="background-color: #f8fafc; border-color: #cbd5e1;">
+      <div class="card-title" style="color: #0f172a; font-size: 0.21in;">3. Edge Deployment Bottleneck</div>
+      <div class="card-desc" style="font-size: 0.155in; line-height: 1.5;">
+        <p>• <strong>Massive Parameter Footprint:</strong> Deep neural networks (MIRNet, Restormer) require 20M to 35M parameters.</p>
+        <p>• <strong>High Latency & Power:</strong> Processing times exceeding 800 ms per frame drain battery life on portable systems.</p>
+        <p>• <strong>Deployment Infeasibility:</strong> Heavy models cannot operate in real time (&lt;50 ms) on mobile cameras or edge devices.</p>
       </div>
     </div>
   </div>
   <div class="slide-footer"><span>VJTI Mumbai | LY B.Tech CE</span><span>Page 2</span></div>
 </div>
 
-<!-- SLIDE 3: What Already Exists vs. Our Improvements -->
+<!-- SLIDE 3: Proposed System: Overview & Key Innovations -->
+<div class="slide">
+  <div class="slide-header">
+    <div class="slide-tag">Proposed System — Solution Overview</div>
+    <div class="slide-title">Proposed System: Lightweight YUV-Decoupled Network</div>
+  </div>
+  <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.25in;">
+    <div class="card" style="background-color: #eff6ff; border-color: #93c5fd;">
+      <div class="card-title" style="color: #1e3a8a; font-size: 0.21in;">1. YUV Color Space Decoupling</div>
+      <div class="card-desc" style="font-size: 0.155in; line-height: 1.5;">
+        <p>• <strong>Decoupled Channels:</strong> Converts RGB into Luminance (Y - brightness/structure) and Chrominance (UV - color differences).</p>
+        <p>• <strong>Isolated Restoration:</strong> Optimizes illumination recovery without affecting color, ensuring noise removal never bleeds into color shifts.</p>
+        <p>• <strong>Authentic Chromaticity:</strong> Eliminates cross-channel distortion and avoids unnatural hue artifacts completely.</p>
+      </div>
+    </div>
+    <div class="card" style="background-color: #f0fdf4; border-color: #a7f3d0;">
+      <div class="card-title" style="color: #047857; font-size: 0.21in;">2. Hybrid CNN–Transformer Design</div>
+      <div class="card-desc" style="font-size: 0.155in; line-height: 1.5;">
+        <p>• <strong>Y Branch (MHSA):</strong> Multi-Head Self-Attention on pooled 16×16 spatial tokens models global illumination context efficiently.</p>
+        <p>• <strong>UV Branch (CWD):</strong> Dual Channel-Wise Denoiser CNN blocks suppress color noise at full 256×256 spatial resolution.</p>
+        <p>• <strong>MSEF Fusion:</strong> Multi-Stage Squeeze and Excite Fusion dynamically recalibrates all 24 feature maps before outputting clean RGB.</p>
+      </div>
+    </div>
+    <div class="card" style="background-color: #faf5ff; border-color: #d8b4fe;">
+      <div class="card-title" style="color: #7c3aed; font-size: 0.21in;">3. Compact Footprint & Hybrid Loss</div>
+      <div class="card-desc" style="font-size: 0.155in; line-height: 1.5;">
+        <p>• <strong>Ultra-Lightweight:</strong> Only <strong>12,060 parameters (72 KB file size)</strong> with <strong>&lt;50 milliseconds</strong> real-time inference latency.</p>
+        <p>• <strong>Custom 4-Term Loss:</strong> Supervised by Smooth L1, SSIM, Cosine Color, and Horizontal Edge losses.</p>
+        <p>• <strong>Self-Contained Training:</strong> Trained from scratch for 100 epochs without requiring any heavy external 138M VGG network.</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>VJTI Mumbai | LY B.Tech CE</span><span>Page 3</span></div>
+</div>
+
+<!-- SLIDE 4: What Already Exists vs. Our Improvements -->
 <div class="slide">
   <div class="slide-header">
     <div class="slide-tag">Literature Review & Comparison</div>
@@ -856,13 +937,13 @@ def create_pdf_from_html():
     </div>
     <div class="card" style="background-color: #eff6ff; border-color: #3b82f6;">
       <div class="card-title" style="color: #1d4ed8;">Our Lightweight LYT-Net (This Project)</div>
-      <div class="card-desc"><strong>Working:</strong> Luminance–Chrominance (YUV) Decoupling + Pooled Attention + 4-Loss (~12K parameters) &nbsp;|&nbsp; <strong>Speed:</strong> ⚡ &lt;50 ms (Real-Time)<br><span style="color: #059669;"><strong>Advantage:</strong> Clean colors, sharp edges, 72 KB file, zero external VGG network dependency!</span></div>
+      <div class="card-desc"><strong>Working:</strong> Luminance–Chrominance (YUV) Decoupling + Pooled Attention + 4-Loss (~12K parameters) &nbsp;|&nbsp; <strong>Speed:</strong> &lt;50 ms (Real-Time)<br><span style="color: #059669;"><strong>Advantage:</strong> Clean colors, sharp edges, 72 KB file, zero external VGG network dependency!</span></div>
     </div>
   </div>
-  <div class="slide-footer"><span>VJTI Mumbai | LY B.Tech CE</span><span>Page 3</span></div>
+  <div class="slide-footer"><span>VJTI Mumbai | LY B.Tech CE</span><span>Page 4</span></div>
 </div>
 
-<!-- SLIDE 4: End-to-End Engineering Pipeline Flowchart -->
+<!-- SLIDE 5: End-to-End Engineering Pipeline Flowchart -->
 <div class="slide">
   <div class="slide-header">
     <div class="slide-tag">Methodology — Flowchart</div>
@@ -881,10 +962,10 @@ def create_pdf_from_html():
       <strong>5. 4-Term Loss:</strong> Supervised by Smooth L1, Structural Similarity Index Measure (SSIM), Cosine Color, and Horizontal Edge losses.
     </div>
   </div>
-  <div class="slide-footer"><span>VJTI Mumbai | LY B.Tech CE</span><span>Page 4</span></div>
+  <div class="slide-footer"><span>VJTI Mumbai | LY B.Tech CE</span><span>Page 5</span></div>
 </div>
 
-<!-- SLIDE 5: Why Luminance–Chrominance Color Space (YUV)? -->
+<!-- SLIDE 6: Why Luminance–Chrominance Color Space (YUV)? -->
 <div class="slide">
   <div class="slide-header">
     <div class="slide-tag">Methodology — Color Representation</div>
@@ -892,7 +973,7 @@ def create_pdf_from_html():
   </div>
   <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.35in;">
     <div class="card" style="background-color: #fef2f2; border-color: #fca5a5;">
-      <div class="card-title" style="color: #b91c1c; font-size: 0.22in;">❌ Tangled Red-Green-Blue (RGB) Space</div>
+      <div class="card-title" style="color: #b91c1c; font-size: 0.22in;">Drawbacks of Tangled Red-Green-Blue (RGB) Space</div>
       <div class="card-desc" style="font-size: 0.17in; line-height: 1.55;">
         <p>• In standard RGB, all 3 channels mix brightness and color together.</p>
         <p>• Boosting dark pixels shifts the delicate ratio between Red, Green, and Blue, creating ugly color casts (yellow, purple, or gray).</p>
@@ -901,7 +982,7 @@ def create_pdf_from_html():
       </div>
     </div>
     <div class="card" style="background-color: #f0fdf4; border-color: #86efac;">
-      <div class="card-title" style="color: #047857; font-size: 0.22in;">✅ Separated Luminance–Chrominance (YUV)</div>
+      <div class="card-title" style="color: #047857; font-size: 0.22in;">Advantages of Separated Luminance–Chrominance (YUV)</div>
       <div class="card-desc" style="font-size: 0.17in; line-height: 1.55;">
         <p>• <strong>Y (Luminance):</strong> Holds grayscale brightness, lighting gradients, and object outlines.</p>
         <p>• <strong>UV (Chrominance):</strong> Holds pure color differences (U: blue-yellow, V: red-green).</p>
@@ -911,100 +992,104 @@ def create_pdf_from_html():
       </div>
     </div>
   </div>
-  <div class="slide-footer"><span>VJTI Mumbai | LY B.Tech CE</span><span>Page 5</span></div>
+  <div class="slide-footer"><span>VJTI Mumbai | LY B.Tech CE</span><span>Page 6</span></div>
 </div>
 
-<!-- SLIDE 6: LYT-Net Dual-Branch Architecture Overview (Diagram 1) -->
+<!-- SLIDE 7: LYT-Net Dual-Branch Architecture Overview (Diagram 1) -->
 <div class="slide">
   <div class="slide-header">
     <div class="slide-tag">Architecture — Diagram 1</div>
     <div class="slide-title">LYT-Net Dual-Branch Architecture Overview</div>
   </div>
-  <div style="display: grid; grid-template-columns: 1.55fr 1fr; gap: 0.3in; align-items: center;">
+  <div style="display: grid; grid-template-columns: 1.6fr 1fr; gap: 0.3in; align-items: center;">
     <div>
-      <img src="results/report_figures/custom_block_flow_arch.png" style="max-width: 100%; max-height: 5.5in; border-radius: 8px; border: 1.5px solid #cbd5e1;">
+      <img src="results/report_figures/custom_block_flow_arch.png" style="max-width: 100%; max-height: 5.5in; border-radius: 8px; border: 1px solid #cbd5e1;">
     </div>
-    <div style="display: flex; flex-direction: column; gap: 0.16in;">
+    <div style="display: flex; flex-direction: column; gap: 0.14in;">
       <div class="card">
         <div class="card-title" style="color: #2563eb;">Top Y Branch (Luminance)</div>
         <div class="card-desc">Handles global room lighting. Uses 3×3 Convolution layers, pooling, and Multi-Head Self-Attention (MHSA) to model room-wide illumination gradients.</div>
       </div>
       <div class="card">
         <div class="card-title" style="color: #059669;">Bottom UV Branch (Chrominance)</div>
-        <div class="card-desc">Handles color cleaning. Uses a Channel-Wise Denoiser (CWD) Convolutional Neural Network with skip connections to clean color noise without blurring.</div>
+        <div class="card-desc">Handles color cleaning. Uses a Channel-Wise Denoiser (CWD) CNN block with skip connections to clean color noise without blurring.</div>
       </div>
       <div class="card">
-        <div class="card-title" style="color: #7c3aed;">Skip Connections & MSEF</div>
-        <div class="card-desc">Original Y and UV signals are added back residually so native details are never lost, then fused via Multi-Stage Squeeze and Excite Fusion (MSEF).</div>
+        <div class="card-title" style="color: #7c3aed;">Skip Connections</div>
+        <div class="card-desc">Original Y and UV signals are added back residually so native details are never lost.</div>
       </div>
-    </div>
-  </div>
-  <div class="slide-footer"><span>VJTI Mumbai | LY B.Tech CE</span><span>Page 6</span></div>
-</div>
-
-<!-- SLIDE 7: Layer & 3D Tensor Flow + Upsampling & Fusion Math (Diagram 2) -->
-<div class="slide">
-  <div class="slide-header">
-    <div class="slide-tag">Architecture — Diagram 2</div>
-    <div class="slide-title">Layer & 3D Tensor Flow + Upsampling & Fusion Math</div>
-  </div>
-  <div style="display: grid; grid-template-columns: 1.55fr 1fr; gap: 0.3in; align-items: center;">
-    <div>
-      <img src="results/report_figures/custom_lenet_style_arch.jpeg" style="max-width: 100%; max-height: 5.5in; border-radius: 8px; border: 1.5px solid #cbd5e1;">
-    </div>
-    <div style="display: flex; flex-direction: column; gap: 0.12in;">
       <div class="card">
-        <div class="card-title" style="color: #1e3a8a; font-size: 0.19in;">Step-by-Step Dimensionality Math</div>
-        <div class="card-desc" style="font-size: 0.145in;">
-          <p><strong>1. Split & Expand:</strong> 3@256×256 RGB splits into 1@256×256 (Y) and 2@256×256 (UV). 3×3 Convolutions (stride=1, pad=1) expand them to 24@256×256 feature maps.</p>
-          <p><strong>2. Adaptive Pooling:</strong> Shrinks Y branch to 24@16×16 (256 summary blocks) so Multi-Head Self-Attention (MHSA) analyzes global lighting super fast.</p>
-          <p><strong>3. Bilinear Upsampling (Big Again):</strong> Right after MHSA, Bilinear Upsampling smoothly stretches 24@16×16 back to 24@256×256 to match the UV branch perfectly.</p>
-          <p><strong>4. MSEF Fusion (24@256×256):</strong> Combines both branches, squeezes each channel into 1 score (24@1×1), computes 0–1 attention weights, and multiplies across full 24@256×256 feature maps before outputting 3@256×256 Enhanced RGB (12,060 params total).</p>
-        </div>
+        <div class="card-title" style="color: #d97706;">MSEF Recombination</div>
+        <div class="card-desc">Multi-Stage Squeeze and Excite Fusion fuses both streams into a clean Enhanced Red-Green-Blue (RGB) photo.</div>
       </div>
     </div>
   </div>
   <div class="slide-footer"><span>VJTI Mumbai | LY B.Tech CE</span><span>Page 7</span></div>
 </div>
 
-<!-- SLIDE 8: Core Building Blocks & Custom 4-Term Hybrid Loss -->
+<!-- SLIDE 8: Layer & 3D Tensor Flow + Upsampling & Fusion Math (Diagram 2) -->
 <div class="slide">
   <div class="slide-header">
-    <div class="slide-tag">Methodology — Modules & Losses</div>
-    <div class="slide-title">Core Building Blocks & Custom 4-Term Hybrid Loss</div>
+    <div class="slide-tag">Architecture — Diagram 2</div>
+    <div class="slide-title">Layer & 3D Tensor Flow + Upsampling & Fusion Math</div>
   </div>
-  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.3in;">
-    <div class="card">
-      <div class="card-title" style="color: #1e3a8a;">How the 3 Core Blocks Work</div>
-      <div class="card-desc">
-        <p>• <strong>Multi-Head Self-Attention (MHSA):</strong> Looks at the entire scene at once (using fast 16×16 grid) to balance uneven lighting across dark corners and bright lamps.</p>
-        <p>• <strong>Channel-Wise Denoiser (CWD):</strong> Cleans speckled camera grain in color channels using lightweight 3×3 and 1×1 convolutions while keeping outlines sharp.</p>
-        <p>• <strong>Multi-Stage Squeeze and Excite Fusion (MSEF):</strong> Scores all 24 feature maps ('Squeeze'), boosts the clearest ones while suppressing noisy ones ('Excite'), keeping full 256×256 resolution.</p>
-      </div>
+  <div style="display: grid; grid-template-columns: 1.6fr 1fr; gap: 0.3in; align-items: center;">
+    <div>
+      <img src="results/report_figures/custom_lenet_style_arch.jpeg" style="max-width: 100%; max-height: 5.5in; border-radius: 8px; border: 1px solid #cbd5e1;">
     </div>
-    <div class="card" style="background-color: #eff6ff; border-color: #93c5fd;">
-      <div class="card-title" style="color: #1d4ed8;">Custom 4-Term Hybrid Loss (No VGG Dependency)</div>
-      <div class="card-desc">
-        <p>• <strong>Smooth L1 Loss (Weight 1.0):</strong> Overall pixel brightness without over-reacting to outliers.</p>
-        <p>• <strong>Structural Similarity Index Measure (SSIM) Loss (Weight 0.5):</strong> Contrast and structural patterns so photos look naturally sharp.</p>
-        <p>• <strong>Cosine Color Loss (Weight 0.1):</strong> Mathematical angle between color vectors, ensuring true colors without tint.</p>
-        <p>• <strong>Horizontal Edge Loss (Weight 0.1):</strong> Penalizes horizontal gradient errors, guaranteeing razor-sharp contours.</p>
-        <p>• <strong>Self-Contained Training:</strong> Trained from scratch for 100 epochs using AdamW without needing a heavy external 138M VGG network!</p>
+    <div style="display: flex; flex-direction: column; gap: 0.14in;">
+      <div class="card">
+        <div class="card-title" style="color: #1e3a8a;">Step-by-Step Dimensionality Math</div>
+        <div class="card-desc">
+          <p>• <strong>1. Split & Expand:</strong> 3@256×256 RGB splits into 1@256×256 (Y) and 2@256×256 (UV). 3×3 Convolutions (stride=1, pad=1) expand them to 24@256×256 feature maps.</p>
+          <p>• <strong>2. Adaptive Pooling:</strong> Shrinks Y branch to 24@16×16 (256 summary blocks) so Multi-Head Self-Attention (MHSA) analyzes global lighting super fast.</p>
+          <p>• <strong>3. Bilinear Upsampling:</strong> Right after MHSA, Bilinear Upsampling smoothly stretches 24@16×16 back to 24@256×256 to match the UV branch perfectly.</p>
+          <p>• <strong>4. MSEF Fusion (24@256×256):</strong> Squeezes each channel into 1 score (24@1×1), computes 0–1 weights, and multiplies across full 24@256×256 maps before outputting 3@256×256 Enhanced RGB.</p>
+        </div>
       </div>
     </div>
   </div>
   <div class="slide-footer"><span>VJTI Mumbai | LY B.Tech CE</span><span>Page 8</span></div>
 </div>
 
-<!-- SLIDE 9: Dataset Used -->
+<!-- SLIDE 9: Core Building Blocks & Custom 4-Term Hybrid Loss -->
+<div class="slide">
+  <div class="slide-header">
+    <div class="slide-tag">Methodology — Modules & Loss</div>
+    <div class="slide-title">Core Building Blocks & Custom 4-Term Hybrid Loss</div>
+  </div>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.35in;">
+    <div class="card">
+      <div class="card-title" style="color: #0f172a; font-size: 0.22in;">How the 3 Core Blocks Work</div>
+      <div class="card-desc" style="font-size: 0.16in;">
+        <p>• <strong style="color: #7c3aed;">Multi-Head Self-Attention (MHSA):</strong> Looks at the entire scene at once (using fast 16×16 grid) to balance uneven lighting across dark corners and bright lamps.</p>
+        <p>• <strong style="color: #2563eb;">Channel-Wise Denoiser (CWD):</strong> Cleans speckled camera grain in color channels using lightweight 3×3 and 1×1 convolutions while keeping outlines sharp.</p>
+        <p>• <strong style="color: #059669;">Multi-Stage Squeeze and Excite Fusion (MSEF):</strong> Scores all 24 feature maps ('Squeeze'), boosts the clearest ones while suppressing noisy ones ('Excite'), keeping full 256×256 resolution.</p>
+      </div>
+    </div>
+    <div class="card" style="background-color: #eff6ff; border-color: #93c5fd;">
+      <div class="card-title" style="color: #1e3a8a; font-size: 0.22in;">Custom 4-Term Hybrid Loss (No VGG Dependency)</div>
+      <div class="card-desc" style="font-size: 0.16in;">
+        <p>• <strong>1. Smooth L1 Loss (Weight 1.0):</strong> Judges overall pixel brightness smoothly without over-reacting to outliers.</p>
+        <p>• <strong>2. SSIM Loss (Weight 0.5):</strong> Judges contrast and structural patterns so photos look naturally sharp.</p>
+        <p>• <strong>3. Cosine Color Loss (Weight 0.1):</strong> Judges mathematical angle between color vectors, ensuring true colors without tint.</p>
+        <p>• <strong>4. Horizontal Edge Loss (Weight 0.1):</strong> Penalizes horizontal gradient errors, guaranteeing razor-sharp contours.</p>
+        <p>• <strong>Self-Contained Training:</strong> Trained from scratch for 100 epochs using AdamW without needing a heavy external 138M VGG network!</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>VJTI Mumbai | LY B.Tech CE</span><span>Page 9</span></div>
+</div>
+
+<!-- SLIDE 10: Dataset Used: Unified Multi-Domain Low-Light Benchmark -->
 <div class="slide">
   <div class="slide-header">
     <div class="slide-tag">Dataset</div>
     <div class="slide-title">Dataset Used: Unified Multi-Domain Low-Light Benchmark</div>
   </div>
-  <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.3in; margin-bottom: 0.3in;">
+  <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.25in; margin-bottom: 0.25in;">
     <div class="card" style="border-top: 4px solid #2563eb;">
-      <div class="card-title">Low-Light Dataset v1 (LOL-v1)</div>
+      <div class="card-title">Low-Light Dataset v1</div>
       <div style="font-size: 0.18in; font-weight: 700; color: #2563eb; margin-bottom: 0.08in;">500 Pairs (485 Train / 15 Test)</div>
       <div class="card-desc">Captured with real DSLR cameras across real indoor and outdoor scenes with varied ISO gain and exposure times.</div>
     </div>
@@ -1023,10 +1108,10 @@ def create_pdf_from_html():
     <div class="card-title" style="color: #047857;">TOTAL DATASET SCALE: 2,289 MULTI-DOMAIN PAIRED IMAGES (2,074 TRAIN / 215 TEST)</div>
     <div class="card-desc">• Preprocessing Pipeline: Synchronized 256×256 spatial random cropping.<br>• Data Augmentation: Reflection padding on small image borders + 50% random horizontal flips to guarantee spatial invariance.</div>
   </div>
-  <div class="slide-footer"><span>VJTI Mumbai | LY B.Tech CE</span><span>Page 9</span></div>
+  <div class="slide-footer"><span>VJTI Mumbai | LY B.Tech CE</span><span>Page 10</span></div>
 </div>
 
-<!-- SLIDE 10: 100-Epoch Training Convergence & Graph Explanation -->
+<!-- SLIDE 11: 100-Epoch Training Convergence & Graph Explanation -->
 <div class="slide">
   <div class="slide-header">
     <div class="slide-tag">Results — Training Curves</div>
@@ -1055,10 +1140,10 @@ def create_pdf_from_html():
       </div>
     </div>
   </div>
-  <div class="slide-footer"><span>VJTI Mumbai | LY B.Tech CE</span><span>Page 10</span></div>
+  <div class="slide-footer"><span>VJTI Mumbai | LY B.Tech CE</span><span>Page 11</span></div>
 </div>
 
-<!-- SLIDE 11: Quantitative Benchmark Evaluation & Graph Explanation -->
+<!-- SLIDE 12: Quantitative Benchmark Evaluation & Graph Explanation -->
 <div class="slide">
   <div class="slide-header">
     <div class="slide-tag">Results — Evaluation</div>
@@ -1079,10 +1164,10 @@ def create_pdf_from_html():
       </div>
     </div>
   </div>
-  <div class="slide-footer"><span>VJTI Mumbai | LY B.Tech CE</span><span>Page 11</span></div>
+  <div class="slide-footer"><span>VJTI Mumbai | LY B.Tech CE</span><span>Page 12</span></div>
 </div>
 
-<!-- SLIDE 12: Qualitative Visual Comparisons (Part 1) -->
+<!-- SLIDE 13: Qualitative Visual Comparisons (Part 1) -->
 <div class="slide">
   <div class="slide-header">
     <div class="slide-tag">Results — Visual Samples 1–3</div>
@@ -1102,10 +1187,10 @@ def create_pdf_from_html():
       <div class="card"><div class="card-desc"><strong>Sample 3: LOL-v2 Real Hallway</strong><br>Channel-Wise Denoiser filters heavy grain; pooled attention captures hallway lighting (27.76 dB Mean-Matched PSNR).</div></div>
     </div>
   </div>
-  <div class="slide-footer"><span>VJTI Mumbai | LY B.Tech CE</span><span>Page 12</span></div>
+  <div class="slide-footer"><span>VJTI Mumbai | LY B.Tech CE</span><span>Page 13</span></div>
 </div>
 
-<!-- SLIDE 13: Qualitative Visual Comparisons (Part 2) & Live Demo -->
+<!-- SLIDE 14: Qualitative Visual Comparisons (Part 2) & Live Demo -->
 <div class="slide">
   <div class="slide-header">
     <div class="slide-tag">Results — Visuals & Demo</div>
@@ -1122,13 +1207,13 @@ def create_pdf_from_html():
     </div>
   </div>
   <div class="card" style="background-color: #f0fdf4; border-color: #86efac;">
-    <div class="card-title" style="color: #047857;">🚀 LIVE INTERACTIVE VIVA DEMONSTRATION TOOL: python infer.py --gradio</div>
+    <div class="card-title" style="color: #047857;">LIVE INTERACTIVE VIVA DEMONSTRATION TOOL: python infer.py --gradio</div>
     <div class="card-desc">• <strong>Interactive Browser UI:</strong> Drag-and-drop any custom dark photo (supports PNG, JPG, JPEG, and iPhone High Efficiency Image Container (HEIC) format).<br>• <strong>Live Telemetry:</strong> Real-time side-by-side [Before | After] slider with millisecond latency telemetry (&lt;50 milliseconds on GPU/MPS).</div>
   </div>
-  <div class="slide-footer"><span>VJTI Mumbai | LY B.Tech CE</span><span>Page 13</span></div>
+  <div class="slide-footer"><span>VJTI Mumbai | LY B.Tech CE</span><span>Page 14</span></div>
 </div>
 
-<!-- SLIDE 14: Future Scope (Expanded & Properly Explained) -->
+<!-- SLIDE 15: Future Scope (Expanded & Properly Explained) -->
 <div class="slide">
   <div class="slide-header">
     <div class="slide-tag">Future Scope</div>
@@ -1156,10 +1241,10 @@ def create_pdf_from_html():
       <div class="card-desc">Extending inference directly to raw camera sensor data (Bayer RAW) and ultra-high-resolution 4K images for professional photography pipelines.</div>
     </div>
   </div>
-  <div class="slide-footer"><span>VJTI Mumbai | LY B.Tech CE</span><span>Page 14</span></div>
+  <div class="slide-footer"><span>VJTI Mumbai | LY B.Tech CE</span><span>Page 15</span></div>
 </div>
 
-<!-- SLIDE 15: Conclusion & Key Takeaways -->
+<!-- SLIDE 16: Conclusion & Key Takeaways -->
 <div class="slide">
   <div class="slide-header">
     <div class="slide-tag">Conclusion</div>
@@ -1177,7 +1262,7 @@ def create_pdf_from_html():
     <div style="font-size: 0.28in; font-weight: 800; color: #047857; margin-bottom: 0.08in;">Thank You! Questions & Discussion Welcomed.</div>
     <div style="font-size: 0.17in; color: #334155;">Live Demo Ready: <code>python infer.py --gradio</code></div>
   </div>
-  <div class="slide-footer"><span>VJTI Mumbai | LY B.Tech CE</span><span>Page 15</span></div>
+  <div class="slide-footer"><span>VJTI Mumbai | LY B.Tech CE</span><span>Page 16</span></div>
 </div>
 
 </body>
@@ -1216,8 +1301,8 @@ def create_pdf_from_html():
 
 
 if __name__ == '__main__':
-    print("Building PPTX presentation (15 slides)...")
+    print("Building PPTX presentation (16 slides)...")
     create_pptx()
-    print("\nBuilding PDF presentation (15 slides)...")
+    print("\nBuilding PDF presentation (16 slides)...")
     create_pdf_from_html()
     print("\nAll presentation deliverables successfully updated!")
